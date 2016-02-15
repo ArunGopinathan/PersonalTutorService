@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.mysql.jdbc.PreparedStatement;
+
 /**
  * @author Arun
  *
@@ -75,6 +77,8 @@ public class MySqlHelper {
 		}
 
 	}
+	
+	
 
 	// dispose the connection
 	public void disposeConnection() {

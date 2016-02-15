@@ -37,7 +37,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class User
 {
-	@SerializedName("UserType")
+	
     private String UserType;
 
     private String Email;

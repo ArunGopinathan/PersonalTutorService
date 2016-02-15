@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 15, 2016 at 08:55 AM
+-- Generation Time: Feb 15, 2016 at 08:45 PM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -36,14 +36,14 @@ CREATE TABLE IF NOT EXISTS `address` (
   `Zipcode` varchar(20) NOT NULL,
   `Lattitude` varchar(15) NOT NULL,
   `Longitude` varchar(15) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `address`
 --
 
 INSERT INTO `address` (`AddressId`, `UserId`, `AddressLine1`, `AddressLine2`, `City`, `State`, `Zipcode`, `Lattitude`, `Longitude`) VALUES
-(2, 3, '513 Summit Ave', 'Apt 178', 'Arlington', 'TX', '76013', 'ABC', 'DEF');
+(4, 6, '513 Summit Ave', 'Apt 178', 'Arlington', 'TX', '76013', 'ABC', 'DEF');
 
 -- --------------------------------------------------------
 
@@ -53,16 +53,17 @@ INSERT INTO `address` (`AddressId`, `UserId`, `AddressLine1`, `AddressLine2`, `C
 
 CREATE TABLE IF NOT EXISTS `login` (
 `UserId` int(11) NOT NULL,
+  `UserTypeId` int(11) NOT NULL,
   `Email` varchar(100) NOT NULL,
   `Password` varchar(200) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `login`
 --
 
-INSERT INTO `login` (`UserId`, `Email`, `Password`) VALUES
-(3, 'arun.gopinathan@mavs.uta.edu', '1234');
+INSERT INTO `login` (`UserId`, `UserTypeId`, `Email`, `Password`) VALUES
+(6, 1, 'arun.gopinathan@mavs.uta.edu', '1234');
 
 -- --------------------------------------------------------
 
@@ -77,14 +78,14 @@ CREATE TABLE IF NOT EXISTS `personalinfo` (
   `LastName` varchar(30) NOT NULL,
   `PhoneNumber` varchar(15) NOT NULL,
   `AddressId` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `personalinfo`
 --
 
 INSERT INTO `personalinfo` (`PersonalInfoId`, `UserId`, `FirstName`, `LastName`, `PhoneNumber`, `AddressId`) VALUES
-(3, 3, 'Arun', 'Gopinathan', '682-234-0909', 2);
+(6, 6, 'Arun', 'Gopinathan', '682-234-0909', 4);
 
 -- --------------------------------------------------------
 
@@ -95,7 +96,7 @@ INSERT INTO `personalinfo` (`PersonalInfoId`, `UserId`, `FirstName`, `LastName`,
 CREATE TABLE IF NOT EXISTS `state_lkp` (
 `StateId` int(11) NOT NULL,
   `StateName` varchar(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `state_lkp`
@@ -214,22 +215,22 @@ ALTER TABLE `usertype`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-MODIFY `AddressId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `AddressId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `personalinfo`
 --
 ALTER TABLE `personalinfo`
-MODIFY `PersonalInfoId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `PersonalInfoId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `state_lkp`
 --
 ALTER TABLE `state_lkp`
-MODIFY `StateId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=52;
+MODIFY `StateId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
 --
 -- AUTO_INCREMENT for table `usertype`
 --
