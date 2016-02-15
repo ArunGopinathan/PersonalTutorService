@@ -1,0 +1,19 @@
+{
+  "User": {
+    "FirstName": "Arun",
+    "LastName": "Gopinathan",
+    "Email": "arun.gopinathan@mavs.uta.edu",
+    "Password": "1234",
+    "UserType": "1",
+    "Address": {
+      "AddressLine1": "513 Summit Ave",
+      "AddressLine2": "Apt 178",
+      "City": "Arlington",
+      "State": "TX",
+      "ZipCode": "76013",
+      "Lattitude": "ABC",
+      "Longitude": "DEF"
+    },
+    "PhoneNumber": "682-234-0909"
+  }
+}

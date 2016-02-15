@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+	<User>
+		<FirstName>Arun</FirstName>
+                <LastName>Gopinathan</LastName>
+                <Email>arun.gopinathan@mavs.uta.edu</Email>
+                <Password>1234</Password>
+                <UserType>1</UserType>
+                <Address>
+                        <AddressLine1>513 Summit Ave</AddressLine1>
+                        <AddressLine2>Apt 178</AddressLine2>
+                        <City>Arlington</City>
+                        <State>TX</State>
+                        <ZipCode>76013</ZipCode>
+                        <Lattitude>ABC</Lattitude>
+                        <Longitude>DEF</Longitude>
+                </Address>
+                <PhoneNumber>682-234-0909</PhoneNumber>
+	</User>
