@@ -1,12 +1,12 @@
 {
   "User": {
-    "FirstName": "Arun",
-    "LastName": "Gopinathan",
-    "Email": "arun.gopinathan@mavs.uta.edu",
+    "FirstName": "Zhenyu",
+    "LastName": "Chen",
+    "Email": "Zhenyu.Chen@mavs.uta.edu",
     "Password": "1234",
     "UserType": "1",
     "Address": {
-      "AddressLine1": "513 Summit Ave",
+      "AddressLine1": "500 Summit Ave",
       "AddressLine2": "Apt 178",
       "City": "Arlington",
       "State": "TX",

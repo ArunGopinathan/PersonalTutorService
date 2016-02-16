@@ -115,7 +115,7 @@ public class PTSWebServiceImpl {
 				
 				user.setAddress(address);
 				
-				user.setPassword(rs.getString("PhoneNumber"));
+				user.setPhoneNumber(rs.getString("PhoneNumber"));
 				
 			}
 		}
@@ -133,8 +133,8 @@ public class PTSWebServiceImpl {
 					.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			loginPreparedStatement.setInt(1,
 					Integer.parseInt(user.getUserType()));
-			loginPreparedStatement.setString(1, user.getEmail());
-			loginPreparedStatement.setString(1, user.getPassword());
+			loginPreparedStatement.setString(2, user.getEmail());
+			loginPreparedStatement.setString(3, user.getPassword());
 
 			loginPreparedStatement.executeUpdate();
 			ResultSet rs = loginPreparedStatement.getGeneratedKeys();
