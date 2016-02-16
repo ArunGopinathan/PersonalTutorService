@@ -9,8 +9,39 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.uta.cse.personaltutorservice.LoginActivity">
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:id="@+id/logoImageView"
+        android:layout_alignParentStart="true"
+        android:src="@mipmap/logo"
+        android:layout_alignParentEnd="true" />
+    <EditText
+        android:id="@+id/txtUserName"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/username"
+        android:layout_below="@+id/logoImageView"/>
+    <EditText
+        android:id="@+id/txtPassword"
+android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        android:layout_below="@+id/txtUserName"/>
+    <Button
+        android:id="@+id/loginButton"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtPassword"
+        android:text="@string/login"/>
+    <Button
+        android:id="@+id/RegisterButton"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginButton"
+        android:text="@string/register"/>
 </RelativeLayout>
