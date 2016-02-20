@@ -1,3 +1,5 @@
+package edu.uta.cse.personaltutorservice;
+
 /**
  * Created by Arun on 2/15/2016.
  */
@@ -91,7 +93,7 @@ public class Address
     @Override
     public String toString()
     {
-        return "Address [State = "+State+", Longitude = "+Longitude+", Lattitude = "+Lattitude+", ZipCode = "+ZipCode+", AddressLine1 = "+AddressLine1+", City = "+City+", AddressLine2 = "+AddressLine2+"]";
+        return "edu.uta.cse.personaltutorservice.Address [State = "+State+", Longitude = "+Longitude+", Lattitude = "+Lattitude+", ZipCode = "+ZipCode+", AddressLine1 = "+AddressLine1+", City = "+City+", AddressLine2 = "+AddressLine2+"]";
     }
 }
 

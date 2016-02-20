@@ -55,6 +55,22 @@ public class PTSWebServiceImpl {
 		helper.disposeConnection();
 
 	}
+	
+	@Path("CheckAvailability/{username}")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String CheckAvailability(@PathParam("username")String username){
+		String result = "";
+		MySqlHelper helper = new MySqlHelper();
+		if(checkUserAvailable(helper,username)){
+			result = "YES";
+		}
+		else{
+			result = "NO";
+		}
+		helper.disposeConnection();
+		return result;
+	}
 
 	@Path("/Authenticate/{username}/{password}")
 	@GET
@@ -84,7 +100,23 @@ public class PTSWebServiceImpl {
 		return result;
 
 	}
-
+	public boolean checkUserAvailable(MySqlHelper helper, String username){
+		boolean result = false;
+		String query = "select * from login where Email=?";
+		try{
+			java.sql.PreparedStatement chkUserPreparedStatement = helper.conn
+					.prepareStatement(query);
+			chkUserPreparedStatement.setString(1, username);
+			ResultSet rs = chkUserPreparedStatement.executeQuery();
+			if(rs.isBeforeFirst()){//if result set is available then the user is there in database
+				result = true;
+			}
+		}
+		catch(Exception ex){
+			result = true; // this would prevent adding users due to error.
+		}
+		return result;
+	}
 	public User getUser(MySqlHelper helper, String userName, String password) {
 		User user = new User();
 		String query = "select * "+
@@ -92,6 +124,7 @@ public class PTSWebServiceImpl {
 				"inner join personalinfo p on a.AddressId = p.AddressId "
 				+"where Email=? and Password= ?";
 		System.out.println(query);
+		System.out.println("u="+userName+" p="+password);
 		try{
 			java.sql.PreparedStatement loginPreparedStatement = helper.conn
 					.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);

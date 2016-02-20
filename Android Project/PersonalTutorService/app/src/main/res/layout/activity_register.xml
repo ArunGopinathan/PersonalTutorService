@@ -12,6 +12,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:id="@+id/RelativeLayout"
+    android:layout_centerInParent="true"
+    android:background="@mipmap/backgrounddesign5"
     >
     <ImageView
         android:layout_width="wrap_content"
@@ -27,6 +30,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtFirstName"
         android:hint="@string/firstname"
+   
+
+        
         android:layout_below="@+id/logoImageView"/>
     <EditText
         android:padding="10dp"
@@ -34,6 +40,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtLastName"
         android:hint="@string/lastname"
+       
+       
+        
         android:layout_below="@+id/txtFirstName"/>
     <EditText
         android:padding="10dp"
@@ -41,19 +50,29 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtEmail"
         android:hint="@string/email"
+       
+       
+        
         android:layout_below="@+id/txtLastName"/>
     <EditText
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtPassword"
+        android:inputType="textPassword"
         android:hint="@string/password"
+       
+       
+        
         android:layout_below="@+id/txtEmail"/>
     <EditText
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtConfirmPassword"
+
+        android:inputType="textPassword"
+        
         android:hint="@string/confirmpassword"
         android:layout_below="@+id/txtPassword"/>
 
@@ -64,6 +83,9 @@
         android:id="@+id/userTypeSpinner"
         android:prompt="@string/usertype"
         android:entries="@array/usertypearray"
+
+       
+        
         android:layout_below="@+id/txtConfirmPassword"
         android:layout_alignParentStart="true"
         android:spinnerMode="dropdown" />
@@ -74,6 +96,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtAddressLine1"
         android:hint="@string/addressline1"
+       
+       
+        
         android:layout_below="@+id/userTypeSpinner"/>
     <EditText
         android:padding="10dp"
@@ -81,18 +106,27 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtAddressLine2"
         android:hint="@string/addressline2"
+       
+       
+        
         android:layout_below="@+id/txtAddressLine1"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtCity"
         android:hint="@string/city"
+       
+       
+        
         android:layout_below="@+id/txtAddressLine2"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtState"
         android:hint="@string/state"
+       
+       
+        
         android:layout_below="@+id/txtCity"/>
 
     <EditText
@@ -100,6 +134,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtZipCode"
         android:hint="@string/zipcode"
+       
+       
+        
         android:layout_below="@+id/txtState"/>
 
     <EditText
@@ -107,6 +144,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtPhoneNumber"
         android:hint="@string/phonenumber"
+
+
+        
+
         android:layout_below="@+id/txtZipCode"/>
     <Button android:id="@+id/RegisterButton"
         android:layout_width="match_parent"

@@ -7,8 +7,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:gravity="center"
+    android:id="@+id/RelativeLayout"
+    android:layout_centerInParent="true"
+    android:background="@mipmap/backgrounddesign5"
     tools:context="edu.uta.cse.personaltutorservice.LoginActivity">
-
+<RelativeLayout
+    android:id="@+id/logoRelativeLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,32 +23,70 @@
         android:layout_alignParentStart="true"
         android:src="@mipmap/logo"
         android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>
+
+   <TextView
+       android:id="@+id/emailtextview"
+       android:paddingBottom="10dp"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="@string/username"
+       android:textStyle="bold"
+
+       android:layout_below="@+id/logoRelativeLayout"
+       />
     <EditText
         android:id="@+id/txtUserName"
-        android:padding="20dp"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/username"
-        android:layout_below="@+id/logoImageView"/>
+        android:textColor="@color/abc_primary_text_material_light"
+        android:background="@android:color/white"
+        android:layout_below="@+id/emailtextview"/>
+    <TextView
+        android:id="@+id/emailpasswordview"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/password"
+        android:textStyle="bold"
+
+        android:layout_below="@+id/txtUserName"
+        />
     <EditText
         android:id="@+id/txtPassword"
-android:padding="20dp"
+        android:inputType="textPassword"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:layout_below="@+id/txtUserName"/>
+        android:background="@android:color/white"
+
+        android:layout_below="@+id/emailpasswordview"/>
     <Button
         android:id="@+id/loginButton"
-        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtPassword"
+        android:textStyle="bold"
+
+       android:layout_marginTop="15dp"
         android:text="@string/login"/>
     <Button
         android:id="@+id/RegisterButton"
-        android:padding="10dp"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/loginButton"
+        android:textStyle="bold"
+
         android:text="@string/register"/>
+    <ProgressBar
+        android:id="@+id/loginProgressBar"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

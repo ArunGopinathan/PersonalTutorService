@@ -1,3 +1,11 @@
+package edu.uta.cse.personaltutorservice;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import edu.uta.cse.personaltutorservice.Address;
+
 /**
  * Created by Arun on 2/15/2016.
  */
@@ -38,7 +46,7 @@ public class User
         this.Email = Email;
     }
 
-    public Address getAddress ()
+    public edu.uta.cse.personaltutorservice.Address getAddress ()
     {
         return Address;
     }
@@ -91,6 +99,23 @@ public class User
     @Override
     public String toString()
     {
-        return "User [UserType = "+UserType+", Email = "+Email+", Address = "+Address+", Password = "+Password+", FirstName = "+FirstName+", PhoneNumber = "+PhoneNumber+", LastName = "+LastName+"]";
+        return "edu.uta.cse.personaltutorservice.User [UserType = "+UserType+", Email = "+Email+", edu.uta.cse.personaltutorservice.Address = "+Address+", Password = "+Password+", FirstName = "+FirstName+", PhoneNumber = "+PhoneNumber+", LastName = "+LastName+"]";
+    }
+    public static User parseUserjsonToJavaObject(String userjson) {
+        // parser to parse the json object
+        JsonParser parser = new JsonParser();
+        JsonObject obj = (JsonObject) parser.parse(userjson);
+
+        User user = new User();// the user object we are trying to populate
+        Gson gson = new Gson();// create a gson object
+        try {
+            // the user json is down one level, so get that and convert to java
+            // object
+            user = gson.fromJson(obj.get("User").toString(), User.class);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return user;
     }
 }

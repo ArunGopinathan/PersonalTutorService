@@ -2,8 +2,8 @@
     <string name="app_name">PersonalTutorService</string>
     <string name="action_settings">Settings</string>
     <!-- Start of Login Page strings-->
-    <string name="username">Enter User Name:</string>
-    <string name="password">Enter Password:</string>
+    <string name="username">Email:</string>
+    <string name="password">Password:</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="title_activity_register">Register</string>
@@ -15,16 +15,26 @@
     <string name="email">Enter Email Id:</string>
     <!--<string name="password">Enter Password:</string>-->
     <string name="confirmpassword">Confirm Password:</string>
-    <string name = "usertype">Select User Type:</string>
-    <string name = "addressline1">Enter Address Line 1:</string>
-    <string name = "addressline2">Enter Address Line 2:</string>
-    <string name = "city">Enter City:</string>
-    <string name = "state">Enter State:</string>
-    <string name = "zipcode">Enter Zip Code:</string>
+    <string name="usertype">Select User Type:</string>
+    <string name="addressline1">Enter Address Line 1:</string>
+    <string name="addressline2">Enter Address Line 2:</string>
+    <string name="city">Enter City:</string>
+    <string name="state">Enter State:</string>
+    <string name="zipcode">Enter Zip Code:</string>
     <string name="phonenumber">Enter Phone Number:</string>
     <string-array name="usertypearray">
         <item>Select User Type:</item>
         <item>Tutor</item>
         <item>Student</item>
     </string-array>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
 </resources>
