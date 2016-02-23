@@ -25,4 +25,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.google.maps:google-maps-services:0.1.11'
 }

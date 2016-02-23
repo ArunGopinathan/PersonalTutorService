@@ -118,4 +118,19 @@ public class User
 
         return user;
     }
+
+    public static String toJsonString(User user){
+        Gson gson = new Gson();
+        String result = "";
+        UserRequest request = new UserRequest();
+        request.setUser(user);
+        try{
+            result = gson.toJson(request, UserRequest.class);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
 }

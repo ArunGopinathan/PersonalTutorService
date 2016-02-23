@@ -43,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/abc_primary_text_material_light"
+        android:inputType="textEmailAddress"
         android:background="@android:color/white"
         android:layout_below="@+id/emailtextview"/>
     <TextView

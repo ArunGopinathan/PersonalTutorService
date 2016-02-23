@@ -50,9 +50,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtEmail"
         android:hint="@string/email"
-       
-       
-        
+        android:inputType="textEmailAddress"
         android:layout_below="@+id/txtLastName"/>
     <EditText
         android:padding="10dp"
@@ -119,7 +117,7 @@
        
         
         android:layout_below="@+id/txtAddressLine2"/>
-    <EditText
+    <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtState"
@@ -144,12 +142,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtPhoneNumber"
         android:hint="@string/phonenumber"
-
+        android:inputType="phone"
 
         
 
         android:layout_below="@+id/txtZipCode"/>
-    <Button android:id="@+id/RegisterButton"
+    <Button android:id="@+id/SignUpButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/register"

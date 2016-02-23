@@ -36,36 +36,40 @@ public class PTSWebServiceImpl {
 
 	@POST
 	@Path("/Register/")
-	@Produces(MediaType.TEXT_XML)
-	public void registerUser(String request) {
+	@Produces(MediaType.TEXT_PLAIN)
+	public String registerUser(String request) {
 		// opens the connection with the personal tutor database
-		MySqlHelper helper = new MySqlHelper();
+		try {
+			MySqlHelper helper = new MySqlHelper();
 
-		// parse json to JavaObject
-		User user = parseUserjsonToJavaObject(request);
+			// parse json to JavaObject
+			User user = parseUserjsonToJavaObject(request);
 
-		// register the login
-		int userId = registerLogin(helper, user);
-		// add the address of the user
-		int addressId = registerAddressOfUser(helper, user, userId);
-		// Add the personal info of the user
-		registerPersonalInfoOfUser(helper, user, userId, addressId);
+			// register the login
+			int userId = registerLogin(helper, user);
+			// add the address of the user
+			int addressId = registerAddressOfUser(helper, user, userId);
+			// Add the personal info of the user
+			registerPersonalInfoOfUser(helper, user, userId, addressId);
 
-		// close the connection
-		helper.disposeConnection();
+			// close the connection
+			helper.disposeConnection();
+			return "YES";
+		} catch (Exception ex) {
+			return "NO";
+		}
 
 	}
-	
+
 	@Path("CheckAvailability/{username}")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String CheckAvailability(@PathParam("username")String username){
+	public String CheckAvailability(@PathParam("username") String username) {
 		String result = "";
 		MySqlHelper helper = new MySqlHelper();
-		if(checkUserAvailable(helper,username)){
+		if (checkUserAvailable(helper, username)) {
 			result = "YES";
-		}
-		else{
+		} else {
 			result = "NO";
 		}
 		helper.disposeConnection();
@@ -80,64 +84,65 @@ public class PTSWebServiceImpl {
 		String result = "";
 		try {
 			MySqlHelper helper = new MySqlHelper();
-			
+
 			User user = getUser(helper, username, password);
 			UserResult userresult = new UserResult();
 			userresult.setUser(user);
 			result = parseJavaObjectToUserJson(userresult);
-			
+
 			java.util.Date date = new java.util.Date();
 			System.out.println(new Timestamp(date.getTime()));
 			System.out.println("Authentication:" + result);
-			
+
 			helper.disposeConnection();
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
 
 		return result;
 
 	}
-	public boolean checkUserAvailable(MySqlHelper helper, String username){
+
+	public boolean checkUserAvailable(MySqlHelper helper, String username) {
 		boolean result = false;
 		String query = "select * from login where Email=?";
-		try{
+		try {
 			java.sql.PreparedStatement chkUserPreparedStatement = helper.conn
 					.prepareStatement(query);
 			chkUserPreparedStatement.setString(1, username);
 			ResultSet rs = chkUserPreparedStatement.executeQuery();
-			if(rs.isBeforeFirst()){//if result set is available then the user is there in database
+			if (rs.isBeforeFirst()) {// if result set is available then the user
+										// is there in database
 				result = true;
 			}
-		}
-		catch(Exception ex){
+		} catch (Exception ex) {
 			result = true; // this would prevent adding users due to error.
 		}
 		return result;
 	}
+
 	public User getUser(MySqlHelper helper, String userName, String password) {
 		User user = new User();
-		String query = "select * "+
-				"from login u inner join address a on u.UserId = a.UserId "+
-				"inner join personalinfo p on a.AddressId = p.AddressId "
-				+"where Email=? and Password= ?";
+		String query = "select * "
+				+ "from login u inner join address a on u.UserId = a.UserId "
+				+ "inner join personalinfo p on a.AddressId = p.AddressId "
+				+ "where Email=? and Password= ?";
 		System.out.println(query);
-		System.out.println("u="+userName+" p="+password);
-		try{
+		System.out.println("u=" + userName + " p=" + password);
+		try {
 			java.sql.PreparedStatement loginPreparedStatement = helper.conn
 					.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			loginPreparedStatement.setString(1, userName);
 			loginPreparedStatement.setString(2, password);
 			ResultSet rs = loginPreparedStatement.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				user.setFirstName(rs.getString("FirstName"));
 				user.setLastName(rs.getString("LastName"));
 				user.setUserType(Integer.toString(rs.getInt("UserTypeId")));
 				user.setEmail(rs.getString("Email"));
-				
-				Address address= new Address();
+
+				Address address = new Address();
 				address.setAddressLine1(rs.getString("AddressLine1"));
 				address.setAddressLine2(rs.getString("AddressLine2"));
 				address.setCity(rs.getString("City"));
@@ -145,14 +150,13 @@ public class PTSWebServiceImpl {
 				address.setZipCode(rs.getString("ZipCode"));
 				address.setLattitude(rs.getString("Lattitude"));
 				address.setLongitude(rs.getString("Longitude"));
-				
+
 				user.setAddress(address);
-				
+
 				user.setPhoneNumber(rs.getString("PhoneNumber"));
-				
+
 			}
-		}
-		catch(Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return user;
@@ -257,15 +261,14 @@ public class PTSWebServiceImpl {
 
 		return user;
 	}
-	
-	public String parseJavaObjectToUserJson(UserResult user){
+
+	public String parseJavaObjectToUserJson(UserResult user) {
 		Gson gson = new Gson();
-		String result="";
-		
-		try{
+		String result = "";
+
+		try {
 			result = gson.toJson(user, UserResult.class);
-		}
-		catch(Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return result;
