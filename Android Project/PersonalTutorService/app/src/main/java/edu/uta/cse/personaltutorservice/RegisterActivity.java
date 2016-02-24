@@ -23,9 +23,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterActivity extends ActionBarActivity {
     public static String hostname = "http://personaltutor.uta.ngrok.io/PersonalTutorServiceWebService/PTSWebService/";
@@ -36,7 +43,7 @@ public class RegisterActivity extends ActionBarActivity {
     public static String address_addr_2 = "?addr_2=";
     public static String address_city_state_zip = "&city_state_zip=";
     public String address_validate_request = "";
-    public String registerResult= "";
+    public String registerResult = "";
     Spinner userTypeSpinner;
     EditText firstNameEditText, lastNameEditText, emailEditText, passwordEditText, confirmPasswordEditText;
     EditText addressLine1Text, addressLine2Text, cityEditText, zipEditText, phoneEditText;
@@ -45,6 +52,7 @@ public class RegisterActivity extends ActionBarActivity {
     String firstName, lastName, email, password, userType, addressLine1, addressLine2, city, state, zipcode, phone, lattitude, longitude;
     boolean isuserNameAvailable, isAddressValidated;
     String registerRequestJson;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -84,7 +92,7 @@ public class RegisterActivity extends ActionBarActivity {
         addressLine2Text = (EditText) findViewById(R.id.txtAddressLine2);
         cityEditText = (EditText) findViewById(R.id.txtCity);
         stateEditText = (AutoCompleteTextView) findViewById(R.id.txtState);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,states);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, states);
         stateEditText.setAdapter(adapter);
         zipEditText = (EditText) findViewById(R.id.txtZipCode);
         zipEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -142,19 +150,17 @@ public class RegisterActivity extends ActionBarActivity {
                                         int selectedIndex = userTypeSpinner.getSelectedItemPosition();
                                         if (selectedIndex != 0) {
                                             userType = Integer.toString(selectedIndex);
-                                            if(isAddressValidated){
-                                                if(phoneEditText.getText().length()>0 && phoneEditText.getText().toString()!="" && validCellPhone(phoneEditText.getText().toString())){
+                                            if (isAddressValidated) {
+                                                if (phoneEditText.getText().length() > 0 && phoneEditText.getText().toString() != "" && validCellPhone(phoneEditText.getText().toString())) {
                                                     phone = phoneEditText.getText().toString();
 
                                                     RegisterAsyncTask registerTask = new RegisterAsyncTask();
                                                     registerTask.execute();
-                                                }
-                                                else{
+                                                } else {
                                                     Toast.makeText(RegisterActivity.this, "Please Enter Phone Number", Toast.LENGTH_SHORT).show();
                                                 }
 
-                                            }
-                                            else{
+                                            } else {
                                                 Toast.makeText(RegisterActivity.this, "Address Needs to be Validated", Toast.LENGTH_SHORT).show();
                                             }
                                         } else {
@@ -191,10 +197,11 @@ public class RegisterActivity extends ActionBarActivity {
 
 
     }
-    public boolean validCellPhone(String number)
-    {
+
+    public boolean validCellPhone(String number) {
         return android.util.Patterns.PHONE.matcher(number).matches();
     }
+
     public static boolean isValidEmail(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
@@ -227,7 +234,60 @@ public class RegisterActivity extends ActionBarActivity {
         }
         return isavailable;
     }
-    public String validateAddress(){
+
+    public String validateAddressWithGoogleApi() {
+        String result = "";
+        final Address validateAddr = new Address();
+        validateAddr.setAddressLine1(addressLine1);
+        validateAddr.setAddressLine2(addressLine2);
+        validateAddr.setCity(city);
+        validateAddr.setState(state);
+        validateAddr.setZipCode(zipcode);
+
+        List<Address> la = new ArrayList<Address>();
+
+        try {
+            String path = "http://maps.google.com/maps/api/geocode/json?address=";
+            path += validateAddr.getAddressLine1() + ',' + validateAddr.getAddressLine2() + ',' + validateAddr.getCity() + ',' + validateAddr.getState() + ',' + validateAddr.getZipCode();
+            path = path.replaceAll(" ", "");
+            URL url = new URL(path);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+            if (connection.getResponseCode() == 200) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                int count = 0;
+                List<String> va = new ArrayList<String>();
+                JSONObject addr = new JSONObject(sb.toString());
+                Log.w("PTS-Android", "re:" + addr);
+
+                JSONArray resultsArray = (JSONArray) addr.get("results");
+                Log.w("PTS-Android", "re:" + addr.getString("status"));
+                if (addr.getString("status").equals("OK")) {
+                    Log.w("PTS-Android", "num:" + resultsArray.length());
+                   lattitude = resultsArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat");
+                    longitude = resultsArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng");
+                    isAddressValidated = true;
+                }
+            }
+        } catch(Exception  e)
+        {
+            isAddressValidated = false;
+            e.printStackTrace();
+        }
+
+
+        return result;
+    }
+
+    @Deprecated
+    public String validateAddress() {
         String result = "";
         DefaultHttpClient httpclient = new DefaultHttpClient();
         try {
@@ -241,22 +301,20 @@ public class RegisterActivity extends ActionBarActivity {
                 Log.w("PTS-Android", "Entity : " + result);
                 JSONObject resultJson = new JSONObject(result);
                 try {
-                    lattitude = resultJson.getJSONObject("location").getString("latitude");
+                    lattitude = resultJson.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getString("lat");
                     longitude = resultJson.getJSONObject("location").getString("longitude");
-                    if( lattitude.equals("0") || longitude.equals("0"))
+                    if (lattitude.equals("0") || longitude.equals("0"))
                         isAddressValidated = false;
                     else
                         isAddressValidated = true;
-                }catch(Exception ex){
+                } catch (Exception ex) {
                     isAddressValidated = false;
                 }
 
             }
-        }
-        catch(Exception ex ){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             // When HttpClient instance is no longer needed,
             // shut down the connection manager to ensure
             // immediate deallocation of all system resources
@@ -266,18 +324,21 @@ public class RegisterActivity extends ActionBarActivity {
 
         return result;
     }
+
     private class ValidateAddressAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
-           // super.onPreExecute();
-            address_validate_request = address_hostname +address_addr_1 +Uri.encode(addressLine1 + " "+addressLine2 )+ address_city_state_zip+ Uri.encode(city+" "+state+" "+zipcode);
-            Log.w("PTS-Android",address_validate_request);
+            // super.onPreExecute();
+            //  address_validate_request = address_hostname +address_addr_1 +Uri.encode(addressLine1 + " "+addressLine2 )+ address_city_state_zip+ Uri.encode(city+" "+state+" "+zipcode);
+            // Log.w("PTS-Android",address_validate_request);
+
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             validateAddress();
+            validateAddressWithGoogleApi();
             return null;
         }
     }
@@ -301,7 +362,8 @@ public class RegisterActivity extends ActionBarActivity {
 
         }
     }
-    private void generateRegisterJson(){
+
+    private void generateRegisterJson() {
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -321,14 +383,15 @@ public class RegisterActivity extends ActionBarActivity {
         user.setAddress(address);
         user.setPhoneNumber(phone);
 
-        registerRequestJson =  User.toJsonString(user);
+        registerRequestJson = User.toJsonString(user);
 
     }
-    public String registerUser(){
+
+    public String registerUser() {
         String result = "";
         DefaultHttpClient httpclient = new DefaultHttpClient();
-        try{
-            String url = hostname +registermethod;
+        try {
+            String url = hostname + registermethod;
             HttpPost postRequest = new HttpPost(url);
             postRequest.addHeader("Content-Type", "application/json");
             StringEntity postentity = new StringEntity(registerRequestJson, "UTF-8");
@@ -343,7 +406,7 @@ public class RegisterActivity extends ActionBarActivity {
                 Log.w("PTS-Android", "Entity : " + result);
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             // When HttpClient instance is no longer needed,
@@ -353,22 +416,22 @@ public class RegisterActivity extends ActionBarActivity {
         }
         return result;
     }
+
     private class RegisterAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
-          //  super.onPreExecute();
+            //  super.onPreExecute();
 
             generateRegisterJson();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-           // super.onPostExecute(aVoid);
-            if(registerResult.equals("YES")){
+            // super.onPostExecute(aVoid);
+            if (registerResult.equals("YES")) {
                 Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
 
-            }
-            else{
+            } else {
                 Toast.makeText(RegisterActivity.this, "Registration Failed, Please Try again Later", Toast.LENGTH_SHORT).show();
             }
             onBackPressed();
@@ -376,7 +439,7 @@ public class RegisterActivity extends ActionBarActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            registerResult =  registerUser();
+            registerResult = registerUser();
             return null;
         }
     }

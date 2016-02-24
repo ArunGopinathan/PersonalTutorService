@@ -59,8 +59,8 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (usernameEditText.getText().length()==0 || usernameEditText.getText().toString()=="") {
-                    Toast.makeText(LoginActivity.this, "Please Enter Email", Toast.LENGTH_SHORT).show();
+                if (usernameEditText.getText().length()==0 || usernameEditText.getText().toString()=="" || !RegisterActivity.isValidEmail( usernameEditText.getText().toString()) ) {
+                    Toast.makeText(LoginActivity.this, "Please Enter Valid Email", Toast.LENGTH_SHORT).show();
                 } else if (passwordEditText.getText().length()==0 || passwordEditText.getText().toString()=="") {
                     Toast.makeText(LoginActivity.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
                 } else {
