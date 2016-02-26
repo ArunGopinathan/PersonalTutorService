@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,13 +47,29 @@ public class RegisterActivity extends ActionBarActivity {
     public String registerResult = "";
     Spinner userTypeSpinner;
     EditText firstNameEditText, lastNameEditText, emailEditText, passwordEditText, confirmPasswordEditText;
+    TextView spinnerErrorText;
     EditText addressLine1Text, addressLine2Text, cityEditText, zipEditText, phoneEditText;
     AutoCompleteTextView stateEditText;
     Button registerButton;
     String firstName, lastName, email, password, userType, addressLine1, addressLine2, city, state, zipcode, phone, lattitude, longitude;
     boolean isuserNameAvailable, isAddressValidated;
     String registerRequestJson;
+    ProgressBar progressBar;
 
+    public void emailOnFocusChange(boolean hasFocus){
+        if (!hasFocus) {
+
+            if (emailEditText.getText().length() > 0 && emailEditText.getText().toString() != "" && isValidEmail(emailEditText.getText().toString())) {
+                email = emailEditText.getText().toString();
+                CheckAvailabilityAsyncTask task = new CheckAvailabilityAsyncTask();
+                task.execute();
+
+            } else {
+                Toast.makeText(RegisterActivity.this, "Please Enter Valid Email", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -68,26 +85,18 @@ public class RegisterActivity extends ActionBarActivity {
         firstNameEditText = (EditText) findViewById(R.id.txtFirstName);
         lastNameEditText = (EditText) findViewById(R.id.txtLastName);
         emailEditText = (EditText) findViewById(R.id.txtEmail);
+       // spinnerErrorText = (TextView)findViewById(R.id.spinnerErrorText);
+        progressBar = (ProgressBar)findViewById(R.id.loginProgressBar);
         emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-
-                    if (emailEditText.getText().length() > 0 && emailEditText.getText().toString() != "" && isValidEmail(emailEditText.getText().toString())) {
-                        email = emailEditText.getText().toString();
-                        CheckAvailabilityAsyncTask task = new CheckAvailabilityAsyncTask();
-                        task.execute();
-
-                    } else {
-                        Toast.makeText(RegisterActivity.this, "Please Enter Valid Email", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
+                emailOnFocusChange(hasFocus);
             }
         });
         passwordEditText = (EditText) findViewById(R.id.txtPassword);
         confirmPasswordEditText = (EditText) findViewById(R.id.txtConfirmPassword);
         userTypeSpinner = (Spinner) findViewById(R.id.userTypeSpinner);
+
         addressLine1Text = (EditText) findViewById(R.id.txtAddressLine1);
         addressLine2Text = (EditText) findViewById(R.id.txtAddressLine2);
         cityEditText = (EditText) findViewById(R.id.txtCity);
@@ -95,100 +104,126 @@ public class RegisterActivity extends ActionBarActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, states);
         stateEditText.setAdapter(adapter);
         zipEditText = (EditText) findViewById(R.id.txtZipCode);
-        zipEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (addressLine1Text.getText().length() > 0 && addressLine1Text.getText().toString() != "") {
-                        addressLine1 = addressLine1Text.getText().toString();
-                        if (addressLine2Text.getText().length() > 0 && addressLine2Text.getText().toString() != "") {
-                            addressLine2 = addressLine2Text.getText().toString();
-                            if (cityEditText.getText().length() > 0 && cityEditText.getText().toString() != "") {
-                                city = cityEditText.getText().toString();
-                                if (stateEditText.getText().length() > 0 && stateEditText.getText().toString() != "") {
-                                    state = stateEditText.getText().toString();
-                                    if (zipEditText.getText().length() > 0 && zipEditText.getText().toString() != "") {
-                                        zipcode = zipEditText.getText().toString();
-                                        isAddressValidated = true;
-                                        ValidateAddressAsyncTask validateTask = new ValidateAddressAsyncTask();
-                                        validateTask.execute();
-                                    } else {
-                                        Toast.makeText(RegisterActivity.this, "Please Enter ZipCode", Toast.LENGTH_LONG).show();
-                                    }
-                                } else {
-                                    Toast.makeText(RegisterActivity.this, "Please Enter State", Toast.LENGTH_LONG).show();
-                                }
-                            } else {
-                                Toast.makeText(RegisterActivity.this, "Please Enter City", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Please Enter Address Line2", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(RegisterActivity.this, "Please Enter Address Line1", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-        });
+
         phoneEditText = (EditText) findViewById(R.id.txtPhoneNumber);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (firstNameEditText.getText().length() > 0 && firstNameEditText.getText().toString() != "") {
+
+                if (firstNameEditText.getText().length() == 0 || firstNameEditText.getText().toString().equals("")) {
+                    firstNameEditText.setError("First Name Field is Required");
+                } else {
+                    firstNameEditText.setError(null);
                     firstName = firstNameEditText.getText().toString();
-                    if (lastNameEditText.getText().length() > 0 && lastNameEditText.getText().toString() != "") {
-                        lastName = lastNameEditText.getText().toString();
 
-                        if (isuserNameAvailable) {
-                            // emailEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.tick, 0);
-                            if (passwordEditText.getText().length() > 0 && passwordEditText.getText().toString() != "") {
-                                if (confirmPasswordEditText.getText().length() > 0 && confirmPasswordEditText.getText().toString() != "") {
-                                    if (passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
-                                        password = LoginActivity.md5(passwordEditText.getText().toString());
-
-                                        int selectedIndex = userTypeSpinner.getSelectedItemPosition();
-                                        if (selectedIndex != 0) {
-                                            userType = Integer.toString(selectedIndex);
-                                            if (isAddressValidated) {
-                                                if (phoneEditText.getText().length() > 0 && phoneEditText.getText().toString() != "" && validCellPhone(phoneEditText.getText().toString())) {
-                                                    phone = phoneEditText.getText().toString();
-
-                                                    RegisterAsyncTask registerTask = new RegisterAsyncTask();
-                                                    registerTask.execute();
-                                                } else {
-                                                    Toast.makeText(RegisterActivity.this, "Please Enter Phone Number", Toast.LENGTH_SHORT).show();
-                                                }
-
-                                            } else {
-                                                Toast.makeText(RegisterActivity.this, "Address Needs to be Validated", Toast.LENGTH_SHORT).show();
-                                            }
-                                        } else {
-                                            Toast.makeText(RegisterActivity.this, "Please Select user Type", Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        // Toast.makeText(RegisterActivity.this,selectedIndex , Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(RegisterActivity.this, "Password does not match", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    Toast.makeText(RegisterActivity.this, "Please Confirm Password", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Toast.makeText(RegisterActivity.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Please Enter Email", Toast.LENGTH_SHORT).show();
-                        }
-
-                    } else {
-                        Toast.makeText(RegisterActivity.this, "Please Enter Last Name", Toast.LENGTH_SHORT).show();
-                    }
-                } else
-
-                {
-                    Toast.makeText(RegisterActivity.this, "Please Enter First Name", Toast.LENGTH_SHORT).show();
                 }
+
+                if (lastNameEditText.getText().length() == 0 || lastNameEditText.getText().toString().equals("")) {
+                    lastNameEditText.setError("Last Name Field is Required");
+                } else {
+                    lastNameEditText.setError(null);
+                    lastName = lastNameEditText.getText().toString();
+
+                }
+                if (emailEditText.getText().length() == 0 || emailEditText.getText().toString().equals("")) {
+                    emailEditText.setError("Email Field is Required");
+                } else if (!RegisterActivity.isValidEmail(emailEditText.getText().toString())) {
+                    emailEditText.setError("Please enter a valid Email");
+                } else {
+                    emailEditText.setError(null);
+                    email = emailEditText.getText().toString();
+                    emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            emailOnFocusChange(hasFocus);
+                        }
+                    });
+                }
+
+                if (passwordEditText.getText().length() == 0 || passwordEditText.getText().toString().equals("")) {
+                    passwordEditText.setError("Password Field is Required");
+                } else {
+                    passwordEditText.setError(null);
+                }
+
+                if (confirmPasswordEditText.getText().length() == 0 || confirmPasswordEditText.getText().toString().equals("")) {
+                    confirmPasswordEditText.setError("Password Field is Required");
+                } else if (!passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
+                    confirmPasswordEditText.setError("Passwords do not Match");
+                } else {
+                    confirmPasswordEditText.setError(null);
+                    password = LoginActivity.md5(passwordEditText.getText().toString());
+                }
+                View view = userTypeSpinner.getSelectedView();
+                TextView textView = null;
+                if(view!=null && view instanceof  TextView){
+                      textView = (TextView) view;
+                    if(userTypeSpinner.getSelectedItemPosition()==0){
+
+                        textView.setError("Please Select UserType");
+                    }
+                    else{
+                        textView.setError(null);
+                        userType =  Integer.toString(userTypeSpinner.getSelectedItemPosition());
+                    }
+                }
+                if (addressLine1Text.getText().length() == 0 || addressLine1Text.getText().toString().equals("")) {
+                    addressLine1Text.setError("Address Line 1 is Required");
+                }  else {
+                    addressLine1Text.setError(null);
+                    addressLine1 = addressLine1Text.getText().toString();
+                }
+                addressLine2 = "";
+                if(addressLine2Text.getText().length()>0){
+                    addressLine2 = addressLine2Text.getText().toString();
+                }
+
+                if(cityEditText.getText().length()==0 ||cityEditText.getText().toString().equals("") ){
+                    cityEditText.setError("City Field is Required");
+                }
+                else{
+                    cityEditText.setError(null);
+                    city = cityEditText.getText().toString();
+                }
+
+                if(stateEditText.getText().length()==0 ||stateEditText.getText().toString().equals("") ){
+                    stateEditText.setError("State Field is Required");
+                }
+                else{
+                    stateEditText.setError(null);
+                    state = stateEditText.getText().toString();
+                }
+
+                if(zipEditText.getText().length()==0 ||zipEditText.getText().toString().equals("") ){
+                    zipEditText.setError("ZipCode Field is Required");
+                }
+                else{
+                    zipEditText.setError(null);
+                    zipcode = zipEditText.getText().toString();
+                }
+                if(phoneEditText.getText().length()==0 ||phoneEditText.getText().toString().equals("") ){
+                    phoneEditText.setError("Phone Number Field is Required");
+                }
+                else{
+                    phoneEditText.setError(null);
+                    phone = phoneEditText.getText().toString();
+                }
+
+                if(firstNameEditText.getError()==null && lastNameEditText.getError()==null && emailEditText.getError()==null && passwordEditText.getError()==null && confirmPasswordEditText.getError()==null && !userType.equals("0") && addressLine1Text.getError()==null && cityEditText.getError()==null && stateEditText.getError()==null && phoneEditText.getError()==null){
+                    //validate the address
+                    ValidateAddressAsyncTask validateTask = new ValidateAddressAsyncTask();
+                    validateTask.execute();
+                    //register the address
+                    RegisterAsyncTask registerTask = new RegisterAsyncTask();
+                    registerTask.execute();
+                }
+                else{
+                    Toast.makeText(RegisterActivity.this, "Some Field is buggy", Toast.LENGTH_SHORT).show();
+                }
+
+
+
 
             }
 
@@ -271,13 +306,12 @@ public class RegisterActivity extends ActionBarActivity {
                 Log.w("PTS-Android", "re:" + addr.getString("status"));
                 if (addr.getString("status").equals("OK")) {
                     Log.w("PTS-Android", "num:" + resultsArray.length());
-                   lattitude = resultsArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat");
+                    lattitude = resultsArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat");
                     longitude = resultsArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng");
                     isAddressValidated = true;
                 }
             }
-        } catch(Exception  e)
-        {
+        } catch (Exception e) {
             isAddressValidated = false;
             e.printStackTrace();
         }
@@ -337,13 +371,32 @@ public class RegisterActivity extends ActionBarActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            validateAddress();
+          //  validateAddress();
             validateAddressWithGoogleApi();
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(isAddressValidated==false){
+                addressLine1Text.setError("Invalid Address");
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
         }
     }
 
     private class CheckAvailabilityAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+
+            progressBar.setVisibility(View.VISIBLE);
+            emailEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0);
+        }
+
         @Override
         protected Void doInBackground(Void... params) {
             isuserNameAvailable = checkAvailability(email);
@@ -352,14 +405,21 @@ public class RegisterActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            progressBar.setVisibility(View.GONE);
             if (isuserNameAvailable) {
+                emailEditText.setError(null);
                 emailEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.tick, 0);
             } else {
 
                 emailEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.cross, 0);
-                Toast.makeText(RegisterActivity.this, "User Name Not Available", Toast.LENGTH_SHORT).show();
+                emailEditText.setError("User Name not available");
             }
 
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            progressBar.animate();
         }
     }
 
@@ -421,13 +481,14 @@ public class RegisterActivity extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             //  super.onPreExecute();
-
+            progressBar.setVisibility(View.VISIBLE);
             generateRegisterJson();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             // super.onPostExecute(aVoid);
+            progressBar.setVisibility(View.GONE);
             if (registerResult.equals("YES")) {
                 Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
 
@@ -441,6 +502,11 @@ public class RegisterActivity extends ActionBarActivity {
         protected Void doInBackground(Void... params) {
             registerResult = registerUser();
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            progressBar.animate();
         }
     }
 

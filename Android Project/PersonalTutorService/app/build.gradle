@@ -9,6 +9,7 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -26,4 +27,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.google.code.gson:gson:2.6.1'
     compile 'com.google.maps:google-maps-services:0.1.11'
+    compile 'junit:junit:4.12'
 }

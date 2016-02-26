@@ -76,7 +76,7 @@
 
     <Spinner
         android:padding="10dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userTypeSpinner"
         android:prompt="@string/usertype"
@@ -86,20 +86,30 @@
         
         android:layout_below="@+id/txtConfirmPassword"
         android:layout_alignParentStart="true"
-        android:spinnerMode="dropdown" />
+        android:spinnerMode="dropdown"
+        android:layout_alignEnd="@+id/txtConfirmPassword" />
+   <!-- <TextView
+        android:id="@+id/spinnerErrorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginLeft="70dp"
+        android:focusable="true"
+        android:visibility="visible"
+        android:focusableInTouchMode="true"
+        android:layout_below="@+id/txtConfirmPassword"
+       android:layout_toEndOf="@+id/userTypeSpinner"
+        />-->
 
     <EditText
-        android:padding="10dp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtAddressLine1"
         android:hint="@string/addressline1"
-       
-       
-        
         android:layout_below="@+id/userTypeSpinner"/>
     <EditText
-        android:padding="10dp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtAddressLine2"
@@ -153,6 +163,11 @@
         android:text="@string/register"
         android:layout_below="@+id/txtPhoneNumber"/>
 
-
+    <ProgressBar
+        android:id="@+id/loginProgressBar"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>
 </ScrollView>

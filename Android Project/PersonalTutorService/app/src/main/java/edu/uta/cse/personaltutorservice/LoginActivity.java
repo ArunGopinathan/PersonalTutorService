@@ -36,14 +36,15 @@ public class LoginActivity extends Activity {
     String username, password;
     ProgressBar loginprogress;
     User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.RelativeLayout);
-       // layout.setBackgroundColor(Color.parseColor("#03A9F4"));
+        // layout.setBackgroundColor(Color.parseColor("#03A9F4"));
         user = new User();
-        registerButton = (Button)findViewById(R.id.RegisterButton);
+        registerButton = (Button) findViewById(R.id.RegisterButton);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,14 +53,14 @@ public class LoginActivity extends Activity {
             }
         });
         loginprogress = (ProgressBar) findViewById(R.id.loginProgressBar);
-        usernameEditText = (EditText)findViewById(R.id.txtUserName);
-        passwordEditText = (EditText)findViewById(R.id.txtPassword);
+        usernameEditText = (EditText) findViewById(R.id.txtUserName);
+        passwordEditText = (EditText) findViewById(R.id.txtPassword);
 
-        loginButton = (Button)findViewById(R.id.loginButton);
+        loginButton = (Button) findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (usernameEditText.getText().length()==0 || usernameEditText.getText().toString()=="" || !RegisterActivity.isValidEmail( usernameEditText.getText().toString()) ) {
+                /*if (usernameEditText.getText().length()==0 || usernameEditText.getText().toString()=="" || !RegisterActivity.isValidEmail( usernameEditText.getText().toString()) ) {
                     Toast.makeText(LoginActivity.this, "Please Enter Valid Email", Toast.LENGTH_SHORT).show();
                 } else if (passwordEditText.getText().length()==0 || passwordEditText.getText().toString()=="") {
                     Toast.makeText(LoginActivity.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
@@ -69,12 +70,36 @@ public class LoginActivity extends Activity {
                     AuthenticatorAsyncTask task = new AuthenticatorAsyncTask();
                     task.execute();
 
+                }*/
+                //username validation
+                if (usernameEditText.getText().length() == 0 || usernameEditText.getText().toString() == "") {
+                    usernameEditText.setError("Email Field is Required");
+                } else if (!RegisterActivity.isValidEmail(usernameEditText.getText().toString())) {
+                    usernameEditText.setError("Please Enter a Valid Email");
+                } else {
+                    usernameEditText.setError(null);
                 }
+
+                if (passwordEditText.getText().length() == 0 || passwordEditText.getText().toString() == "") {
+                    passwordEditText.setError("Password Field is Required");
+                } else {
+                    passwordEditText.setError(null);
+                }
+
+                if(usernameEditText.getError() ==null && passwordEditText.getError() ==null){
+                    username = usernameEditText.getText().toString();
+                    password = md5(passwordEditText.getText().toString());
+                    AuthenticatorAsyncTask task = new AuthenticatorAsyncTask();
+                    task.execute();
+                }
+
+
             }
         });
 
 
     }
+
     public static final String md5(final String toEncrypt) {
         try {
             final MessageDigest digest = MessageDigest.getInstance("md5");
@@ -90,27 +115,25 @@ public class LoginActivity extends Activity {
         }
     }
 
-    public User authenticateUser(String username, String password){
+    public User authenticateUser(String username, String password) {
         User user = new User();
         String result = "";
         DefaultHttpClient httpclient = new DefaultHttpClient();
-        try{
-            String url = hostname + loginmethod +username+"/"+password;
+        try {
+            String url = hostname + loginmethod + username + "/" + password;
             HttpGet getRequest = new HttpGet(url);
-            HttpResponse httpResponse = httpclient.execute( getRequest);
+            HttpResponse httpResponse = httpclient.execute(getRequest);
             HttpEntity entity = httpResponse.getEntity();
             Log.w("PTS-Android", httpResponse.getStatusLine().toString());
             if (entity != null) {
                 result = EntityUtils.toString(entity);
-                Log.w("PTS-Android","Entity : "+result);
+                Log.w("PTS-Android", "Entity : " + result);
                 user = User.parseUserjsonToJavaObject(result);
-                Log.w("PTS-Android","User:"+user.toString());
+                Log.w("PTS-Android", "User:" + user.toString());
             }
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             // When HttpClient instance is no longer needed,
             // shut down the connection manager to ensure
             // immediate deallocation of all system resources
@@ -141,7 +164,8 @@ public class LoginActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-    private class AuthenticatorAsyncTask extends AsyncTask<Void, Void, Void>{
+
+    private class AuthenticatorAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             loginprogress.setVisibility(View.VISIBLE);
@@ -151,18 +175,17 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             loginprogress.setVisibility(View.GONE);
-            if (user.getEmail() == null){
-                Toast.makeText(LoginActivity.this,"Invalid User Name / Password", Toast.LENGTH_LONG).show();
-            }
-            else{
-                Intent mainIntent = new Intent(getApplicationContext(),MainActivity.class);
+            if (user.getEmail() == null) {
+                Toast.makeText(LoginActivity.this, "Invalid User Name / Password", Toast.LENGTH_LONG).show();
+            } else {
+                Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(mainIntent);
             }
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            user = authenticateUser(username,password);
+            user = authenticateUser(username, password);
             return null;
         }
 
