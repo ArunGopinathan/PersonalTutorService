@@ -1,0 +1,27 @@
+{
+  "RegisterServiceRequest": {
+    "Category": {
+      "CategoryId": "1",
+      "CategoryName": "science",
+      "isCategoryActive": "1"
+    },
+    "SubCategory": {
+      "SubCategoryId": "1",
+      "CategoryId": "1",
+      "SubCategoryName": "Physics",
+      "isSubCategoryActive": "1"
+    },
+    "Availability": {
+      "Days": {
+        "Day": {
+          "Name": "Monday",
+          "StartTime": "19:00",
+          "EndTime": "20:00"
+        }
+      }
+    },
+    "PricePerHour": "150",
+    "WillingToTravelInMiles": "15",
+    "Advertise": "Yes"
+  }
+}

@@ -26,13 +26,14 @@ public class MySqlHelper {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection(url, "root", "rainbow");
+			
 			System.out.println("Connection Successful");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
-
+	@Deprecated
 	public ResultSet executeQueryAndGetResultSet(String query) {
 		ResultSet result = null;
 
@@ -47,6 +48,7 @@ public class MySqlHelper {
 	}
 
 	//this method will return insert id
+	@Deprecated
 	public int executeInsertQueryAndReturnId(String query) {
 		int id = -1;
 		try {
@@ -66,7 +68,7 @@ public class MySqlHelper {
 
 		return id;
 	}
-
+	@Deprecated
 	public void executeQuery(String query) {
 
 		try {

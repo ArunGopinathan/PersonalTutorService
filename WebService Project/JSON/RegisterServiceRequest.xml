@@ -1,0 +1,25 @@
+<RegisterServiceRequest>
+   <Category>
+      <CategoryId>1</CategoryId>
+      <CategoryName>science</CategoryName>
+      <isCategoryActive>1</isCategoryActive>
+   </Category>
+   <SubCategory>
+       <SubCategoryId>1</SubCategoryId>
+       <CategoryId>1</CategoryId>
+       <SubCategoryName>Physics</SubCategoryName>
+      <isSubCategoryActive>1</isSubCategoryActive>
+   </SubCategory>
+   <Availability>
+      <Days>
+       <Day>
+        <Name>Monday</Name>
+         <StartTime>19:00</StartTime>
+         <EndTime>20:00</EndTime>
+      </Day>
+     </Days>  
+   </Availability>
+   <PricePerHour>150</PricePerHour>
+   <WillingToTravelInMiles>15</WillingToTravelInMiles>
+   <Advertise>Yes</Advertise>
+</RegisterServiceRequest>

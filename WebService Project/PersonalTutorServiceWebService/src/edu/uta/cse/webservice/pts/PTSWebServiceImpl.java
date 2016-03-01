@@ -60,6 +60,15 @@ public class PTSWebServiceImpl {
 		}
 
 	}
+	@POST
+	@Path("RegisterTutorService")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String RegisterService(String requestJson){
+		String result ="HELLO WORLD";
+		RegisterServiceRequest request = null;
+		request = parseRegisterServiceRequestJsonToJavaObject(requestJson);
+		return request.toString();
+	}
 
 	@Path("CheckAvailability/{username}")
 	@GET
@@ -241,6 +250,21 @@ public class PTSWebServiceImpl {
 			ex.printStackTrace();
 		}
 		return -1;
+	}
+	
+	public RegisterServiceRequest parseRegisterServiceRequestJsonToJavaObject(String registerServiceRequestJSON){
+		RegisterServiceRequest registerServiceRequest = new RegisterServiceRequest();
+		JsonParser parser = new JsonParser();
+		Gson gson = new Gson();// create a gson object
+		JsonObject obj = (JsonObject) parser.parse(registerServiceRequestJSON);
+		try{
+			registerServiceRequest = gson.fromJson(obj.get("RegisterServiceRequest").toString(), RegisterServiceRequest.class);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+		return registerServiceRequest;
+		
 	}
 
 	/* User JSON to Java Object */

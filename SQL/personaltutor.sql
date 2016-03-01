@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 15, 2016 at 08:45 PM
+-- Generation Time: Mar 01, 2016 at 03:29 AM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -34,16 +34,29 @@ CREATE TABLE IF NOT EXISTS `address` (
   `City` varchar(50) NOT NULL,
   `State` varchar(2) NOT NULL,
   `Zipcode` varchar(20) NOT NULL,
-  `Lattitude` varchar(15) NOT NULL,
-  `Longitude` varchar(15) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  `Lattitude` varchar(25) NOT NULL,
+  `Longitude` varchar(25) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `address`
 --
 
 INSERT INTO `address` (`AddressId`, `UserId`, `AddressLine1`, `AddressLine2`, `City`, `State`, `Zipcode`, `Lattitude`, `Longitude`) VALUES
-(4, 6, '513 Summit Ave', 'Apt 178', 'Arlington', 'TX', '76013', 'ABC', 'DEF');
+(12, 16, '713 hickory ', 'st', 'Arlington', 'TX', '76012', '32.744326', '-97.13448'),
+(14, 18, '713 Hickory ', 'St.', 'Arlington', 'TX', '76012', '32.756084', '-97.135798'),
+(16, 20, '513 summit Ave', 'Apt 178', 'Arlington', 'TX', '76013', 'NA', 'NA');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `category`
+--
+
+CREATE TABLE IF NOT EXISTS `category` (
+`CategoryId` int(11) NOT NULL,
+  `CategoryName` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -56,14 +69,17 @@ CREATE TABLE IF NOT EXISTS `login` (
   `UserTypeId` int(11) NOT NULL,
   `Email` varchar(100) NOT NULL,
   `Password` varchar(200) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `login`
 --
 
 INSERT INTO `login` (`UserId`, `UserTypeId`, `Email`, `Password`) VALUES
-(6, 1, 'arun.gopinathan@mavs.uta.edu', '1234');
+(7, 1, 'Zhenyu.Chen@mavs.uta.edu', '1234'),
+(16, 1, 'funda@uta.edu', '81dc9bdb52d04dc20036dbd8313ed055'),
+(18, 2, 'fkreilly@gmail.com', '5416d7cd6ef195a0f7622a9c56b55e84'),
+(20, 1, 'arun.gopinathan@mavs.uta.edu', '81dc9bdb52d04dc20036dbd8313ed055');
 
 -- --------------------------------------------------------
 
@@ -78,14 +94,17 @@ CREATE TABLE IF NOT EXISTS `personalinfo` (
   `LastName` varchar(30) NOT NULL,
   `PhoneNumber` varchar(15) NOT NULL,
   `AddressId` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `personalinfo`
 --
 
 INSERT INTO `personalinfo` (`PersonalInfoId`, `UserId`, `FirstName`, `LastName`, `PhoneNumber`, `AddressId`) VALUES
-(6, 6, 'Arun', 'Gopinathan', '682-234-0909', 4);
+(8, 7, 'Zhenyu', 'Chen', '682-234-0909', 6),
+(18, 16, 'Funda ', 'Karapinar-Reilly', '6822340909', 12),
+(20, 18, 'Funda', 'Reilly', '6822031343', 14),
+(22, 20, 'Arun', 'Gopinathan', '6822340909', 16);
 
 -- --------------------------------------------------------
 
@@ -157,6 +176,18 @@ INSERT INTO `state_lkp` (`StateId`, `StateName`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `subcategory`
+--
+
+CREATE TABLE IF NOT EXISTS `subcategory` (
+`SubCategoryId` int(11) NOT NULL,
+  `CategoryId` int(11) NOT NULL,
+  `SubCategoryName` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `usertype`
 --
 
@@ -184,6 +215,12 @@ ALTER TABLE `address`
  ADD PRIMARY KEY (`AddressId`);
 
 --
+-- Indexes for table `category`
+--
+ALTER TABLE `category`
+ ADD PRIMARY KEY (`CategoryId`);
+
+--
 -- Indexes for table `login`
 --
 ALTER TABLE `login`
@@ -202,6 +239,12 @@ ALTER TABLE `state_lkp`
  ADD PRIMARY KEY (`StateId`);
 
 --
+-- Indexes for table `subcategory`
+--
+ALTER TABLE `subcategory`
+ ADD PRIMARY KEY (`SubCategoryId`);
+
+--
 -- Indexes for table `usertype`
 --
 ALTER TABLE `usertype`
@@ -215,22 +258,32 @@ ALTER TABLE `usertype`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-MODIFY `AddressId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `AddressId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+--
+-- AUTO_INCREMENT for table `category`
+--
+ALTER TABLE `category`
+MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `personalinfo`
 --
 ALTER TABLE `personalinfo`
-MODIFY `PersonalInfoId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `PersonalInfoId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `state_lkp`
 --
 ALTER TABLE `state_lkp`
 MODIFY `StateId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
+--
+-- AUTO_INCREMENT for table `subcategory`
+--
+ALTER TABLE `subcategory`
+MODIFY `SubCategoryId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `usertype`
 --
