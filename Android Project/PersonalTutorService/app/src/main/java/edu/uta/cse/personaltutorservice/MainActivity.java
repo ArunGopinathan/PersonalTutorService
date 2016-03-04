@@ -48,10 +48,23 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+
+        android.app.Fragment objFragment = null;
+
+        switch (position){
+
+            case 0:
+                objFragment= new registerTutorService_Fragment();
+                break;
+            case 1:
+                objFragment= new viewTutorProfile_Fragment();
+                break;
+        }
+
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, objFragment)
                 .commit();
     }
 
