@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
-        android.app.Fragment objFragment = null;
+        android.support.v4.app.Fragment objFragment = null;
 
         switch (position){
 
@@ -64,7 +64,7 @@ public class MainActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, objFragment)
+                .replace(R.id.container,objFragment)
                 .commit();
     }
 
@@ -76,9 +76,9 @@ public class MainActivity extends ActionBarActivity
             case 2:
                 mTitle = getString(R.string.title_section2);
                 break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
+            /*case 3:
+                mTitle = getString(R.string.title_section2);
+                break;*/
         }
     }
 
