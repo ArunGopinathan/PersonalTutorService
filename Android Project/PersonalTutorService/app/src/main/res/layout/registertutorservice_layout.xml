@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/backgrounddesign5">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,6 +29,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/categoryAutoCompleteTextView"
         android:hint="@string/enter_category"
+
         android:layout_below="@+id/textView"/>
 
     <AutoCompleteTextView
@@ -40,6 +44,7 @@
     <TextView
         android:padding="10dp"
         android:textSize="18sp"
+        android:textStyle="bold"
         android:id="@+id/labelSelectPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,24 +55,145 @@
         android:padding="10dp"
         android:textSize="18sp"
         android:id="@+id/labelPrice"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
+        style="@android:style/Widget.EditText"
         android:text="@string/initial_price"
         android:layout_below="@+id/subCategoryAutoCompleteTextView"
-        android:layout_alignEnd="@+id/logoImageView" />
+        android:layout_toEndOf="@+id/labelSelectPrice" />
     <SeekBar
         android:layout_marginStart="15dp"
         android:paddingLeft="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/priceSeekBar"
-
         android:max="100"
         android:progress="5"
         android:layout_below="@+id/labelSelectPrice"
 
          />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelAvailability"
+        android:text="Availability:"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        style="@android:style/Widget.EditText"
+        android:layout_below="@+id/priceSeekBar"/>
 
+
+    <CheckBox
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mon"
+        android:id="@+id/checkBoxMon"
+        android:layout_below="@+id/labelAvailability"
+        android:layout_alignStart="@+id/labelAvailability" />
+    <CheckBox
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tue"
+        android:id="@+id/checkBoxTue"
+        android:layout_alignTop="@+id/checkBoxMon"
+        android:layout_toEndOf="@+id/checkBoxFri" />
+    <CheckBox
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wed"
+        android:id="@+id/checkBoxWed"
+        android:layout_alignTop="@+id/checkBoxTue"
+        android:layout_toEndOf="@+id/labelSelectPrice" />
+    <CheckBox
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thu"
+        android:id="@+id/checkBoxThu"
+        android:layout_alignTop="@+id/checkBoxWed"
+        android:layout_toEndOf="@+id/checkBoxWed" />
+    <CheckBox
+        android:padding="10dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fri"
+        android:id="@+id/checkBoxFri"
+        android:layout_below="@+id/checkBoxMon"
+        android:layout_alignStart="@+id/checkBoxMon" />
+
+    <CheckBox
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sat"
+        android:id="@+id/checkBoxSat"
+        android:layout_above="@+id/textViewStartTime"
+        android:layout_toEndOf="@+id/checkBoxFri" />
+    <CheckBox
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sun"
+        android:id="@+id/checkBoxSun"
+        android:layout_alignTop="@+id/checkBoxSat"
+        android:layout_alignStart="@+id/checkBoxWed" />
+
+    <TextView
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:textSize="18sp"
+        android:id="@+id/textViewStartTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/start_time"
+        style="@android:style/Widget.EditText"
+       android:layout_below="@+id/checkBoxFri" />
+
+    <TextView
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:id="@+id/textViewEndTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/end_time"
+        android:layout_below="@+id/textViewStartTime"
+        style="@android:style/Widget.EditText"
+
+
+       />
+
+
+    <Spinner
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/travelInMilesSpinner"
+        android:layout_below="@+id/textViewEndTime"
+        android:entries="@array/travel_miles"
+        />
+
+    <Button
+        android:padding="20dp"
+        android:id="@+id/registerTutorServiceBtn"
+        android:layout_width="match_parent"
+        android:text="@string/register_tutor_service_btn_text"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/travelInMilesSpinner"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/registerServiceProgress"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
 
 </RelativeLayout>
+</ScrollView>

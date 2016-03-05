@@ -3,7 +3,7 @@
  */
 package edu.uta.cse.webservice.pts;
 
-
+@Deprecated
 public class Day
 {
 private String Name;

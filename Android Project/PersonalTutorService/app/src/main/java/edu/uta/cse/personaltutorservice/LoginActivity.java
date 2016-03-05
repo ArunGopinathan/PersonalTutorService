@@ -2,6 +2,7 @@ package edu.uta.cse.personaltutorservice;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -179,6 +180,11 @@ public class LoginActivity extends Activity {
                 Toast.makeText(LoginActivity.this, "Invalid User Name / Password", Toast.LENGTH_LONG).show();
             } else {
                 Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                //session to store the user ID
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPref",MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("UserId", String.valueOf(user.getUserId()));
+                editor.commit();
                 startActivity(mainIntent);
             }
         }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PersonalTutorService</string>
+    <string name="app_name">Find Me A Tutor</string>
     <string name="action_settings">Settings</string>
     <!-- Start of Login Page strings-->
     <string name="username">Email:</string>
@@ -83,7 +83,7 @@
 
 
     </string-array>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Home</string>
 
     <string name="title_section1">Register Tutor Service</string>
     <string name="title_section2">View Tutor Profile</string>
@@ -98,6 +98,18 @@
     <string name="enter_category">Enter Category:</string>
     <string name="enter_sub_category">Enter Sub Category:</string>
     <string name="select_price">Price Per Hour:</string>
-    <string name="initial_price">5 USD</string>
+    <string name="initial_price">0 USD</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="travel_in_miles">Willing to Travel within ? (in Miles)</string>
+    <string name="register_tutor_service_btn_text">Register Tutor Service</string>
+    <string-array name="travel_miles">
+        <item>Select Distance Willing to Travel?(in Miles)</item>
+        <item>0</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>25</item>
+    </string-array>
 
 </resources>

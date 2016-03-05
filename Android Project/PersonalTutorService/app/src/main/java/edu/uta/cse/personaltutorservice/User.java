@@ -12,6 +12,7 @@ import edu.uta.cse.personaltutorservice.Address;
 public class User
 {
 
+    private int UserId;
     private String UserType;
 
     private String Email;
@@ -95,7 +96,13 @@ public class User
     {
         this.LastName = LastName;
     }
+    public int getUserId() {
+        return UserId;
+    }
 
+    public void setUserId(int userId) {
+        UserId = userId;
+    }
     @Override
     public String toString()
     {

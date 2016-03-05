@@ -60,14 +60,46 @@ public class PTSWebServiceImpl {
 		}
 
 	}
+
 	@POST
 	@Path("RegisterTutorService")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String RegisterService(String requestJson){
-		String result ="HELLO WORLD";
-		RegisterServiceRequest request = null;
+	public String RegisterService(String requestJson) {
+		String result = "NO";
+		RegisterServiceRequestObject request = null;
 		request = parseRegisterServiceRequestJsonToJavaObject(requestJson);
-		return request.toString();
+		MySqlHelper helper = new MySqlHelper();
+		try {
+			// check if category exists and get the category Id
+			int categoryId = checkIsCategoryAvailable(helper, request
+					.getCategory().getCategoryName());
+			if (categoryId == -1) {
+				categoryId = insertCategory(helper, request.getCategory()
+						.getCategoryName());
+			}
+			// check if sub category exists and get the sub category Id
+			int subcategoryId = checkIsSubCategoryAvailable(helper, request
+					.getSubCategory().getSubCategoryName(), categoryId);
+			if (subcategoryId == -1) {
+				subcategoryId = insertSubCategory(helper, request
+						.getSubCategory().getSubCategoryName(), categoryId);
+			}
+			deleteExistingAvailability(helper, request.getUserId());
+			//insert availability
+			for (Days day : request.getAvailability().getDays()) {
+				insertAvailability(helper, day, request.getUserId());
+			}
+			int pricePerHour = Integer.parseInt(request.getPricePerHour().split(" ")[0]);
+			insertService(helper,request.getUserId(), categoryId,subcategoryId,pricePerHour,Integer.parseInt(request.getWillingToTravelInMiles()),request.getAdvertise());
+			result = "YES";
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			helper.disposeConnection();
+		}
+
+		return result;
 	}
 
 	@Path("CheckAvailability/{username}")
@@ -113,6 +145,152 @@ public class PTSWebServiceImpl {
 
 	}
 
+	// first delete the availability that exists for the user.
+	public void deleteExistingAvailability(MySqlHelper helper, int UserId) {
+		String query = "delete from availability where UserId=?";
+		try {
+			java.sql.PreparedStatement deleteStatement = helper.conn
+					.prepareStatement(query);
+			deleteStatement.setInt(1, UserId);
+			deleteStatement.executeUpdate();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
+	public void insertService(MySqlHelper helper,int UserId, int CategoryId, int SubCategoryId, int pricePerHour, int Distance, String isAdvertised ){
+		String query = "insert into service(UserId, CategoryId, SubCategoryId, PricePerHour, DistanceWillingToTravelInMiles, isAdvertised) values(?,?,?,?,?,?)";
+		try {
+
+			
+			java.sql.PreparedStatement insertServiceStatement = helper.conn
+					.prepareStatement(query);
+			insertServiceStatement.setInt(1, UserId);
+			insertServiceStatement.setInt(2, CategoryId);
+			insertServiceStatement.setInt(3, SubCategoryId);
+			insertServiceStatement.setInt(4, pricePerHour);
+			insertServiceStatement.setInt(5, Distance);
+			insertServiceStatement.setString(6, isAdvertised);
+			
+			insertServiceStatement.executeUpdate();
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	public void insertAvailability(MySqlHelper helper, Days day, int UserId) {
+		String query = "";
+		try {
+
+			query = "insert into availability(UserId,Day,StartTime,EndTime) values(?,?,?,?)";
+			java.sql.PreparedStatement insertAvailabilityStatement = helper.conn
+					.prepareStatement(query);
+			insertAvailabilityStatement.setInt(1, UserId);
+			insertAvailabilityStatement.setString(2, day.getName());
+			insertAvailabilityStatement.setString(3, day.getStartTime());
+			insertAvailabilityStatement.setString(4, day.getEndTime());
+
+			insertAvailabilityStatement.executeUpdate();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
+	public int insertCategory(MySqlHelper helper, String CategoryName) {
+
+		String query = "insert into category(CategoryName, isCategoryActive) values(?,?)";
+		try {
+			java.sql.PreparedStatement insertCategoryPreparedStatement = helper.conn
+					.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			insertCategoryPreparedStatement.setString(1, CategoryName);
+			insertCategoryPreparedStatement.setInt(2, 0);// 0 for inactive
+			insertCategoryPreparedStatement.executeUpdate();
+			ResultSet rs = insertCategoryPreparedStatement.getGeneratedKeys();
+			if (rs.next()) {
+				int last_inserted_id = rs.getInt(1);
+				return last_inserted_id;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return -1;
+	}
+
+	public int insertSubCategory(MySqlHelper helper, String subCategoryName,
+			int CategoryId) {
+
+		String query = "insert into subcategory(CategoryId, SubCategoryName, isSubCategoryActive) values(?,?,?)";
+		try {
+			java.sql.PreparedStatement insertSubCategoryPreparedStatement = helper.conn
+					.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			insertSubCategoryPreparedStatement.setInt(1, CategoryId);// 0 for
+																		// inactive
+			insertSubCategoryPreparedStatement.setString(2, subCategoryName);
+			insertSubCategoryPreparedStatement.setInt(3, 0);// 0 for inactive
+			insertSubCategoryPreparedStatement.executeUpdate();
+			ResultSet rs = insertSubCategoryPreparedStatement
+					.getGeneratedKeys();
+			if (rs.next()) {
+				int last_inserted_id = rs.getInt(1);
+				return last_inserted_id;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return -1;
+	}
+
+	public int checkIsCategoryAvailable(MySqlHelper helper, String CategoryName) {
+		int isAvailable = -1;
+		String query = "select CategoryId from category where CategoryName=? and isCategoryActive=?";
+		try {
+			java.sql.PreparedStatement chkUserPreparedStatement = helper.conn
+					.prepareStatement(query);
+			chkUserPreparedStatement.setString(1, CategoryName);
+			chkUserPreparedStatement.setInt(2, 1); // 1 for active
+			ResultSet rs = chkUserPreparedStatement.executeQuery();
+			if (rs.next()) {// if result set is available then the category
+							// is there in database
+				isAvailable = rs.getInt("CategoryId");
+
+			}
+		} catch (Exception ex) {
+			isAvailable = -1;
+		}
+
+		return isAvailable;
+
+	}
+
+	public int checkIsSubCategoryAvailable(MySqlHelper helper,
+			String subCategoryName, int CategoryId) {
+		int isAvailable = -1;
+		String query = "select SubCategoryId from subcategory where SubCategoryName=? and isSubCategoryActive=? and CategoryId=?";
+		try {
+			java.sql.PreparedStatement chkUserPreparedStatement = helper.conn
+					.prepareStatement(query);
+			chkUserPreparedStatement.setString(1, subCategoryName);
+			chkUserPreparedStatement.setInt(2, 1); // 1 for active
+			chkUserPreparedStatement.setInt(3, CategoryId);
+			ResultSet rs = chkUserPreparedStatement.executeQuery();
+			if (rs.next()) {// if result set is available then the category
+							// is there in database
+				isAvailable = rs.getInt("SubCategoryId");
+
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			isAvailable = -1;
+		}
+
+		return isAvailable;
+
+	}
+
 	public boolean checkUserAvailable(MySqlHelper helper, String username) {
 		boolean result = false;
 		String query = "select * from login where Email=?";
@@ -146,6 +324,7 @@ public class PTSWebServiceImpl {
 			loginPreparedStatement.setString(2, password);
 			ResultSet rs = loginPreparedStatement.executeQuery();
 			while (rs.next()) {
+				user.setUserId(rs.getInt("UserId"));
 				user.setFirstName(rs.getString("FirstName"));
 				user.setLastName(rs.getString("LastName"));
 				user.setUserType(Integer.toString(rs.getInt("UserTypeId")));
@@ -251,20 +430,23 @@ public class PTSWebServiceImpl {
 		}
 		return -1;
 	}
-	
-	public RegisterServiceRequest parseRegisterServiceRequestJsonToJavaObject(String registerServiceRequestJSON){
-		RegisterServiceRequest registerServiceRequest = new RegisterServiceRequest();
+
+	public RegisterServiceRequestObject parseRegisterServiceRequestJsonToJavaObject(
+			String registerServiceRequestJSON) {
+		RegisterServiceRequestObject registerServiceRequest = new RegisterServiceRequestObject();
 		JsonParser parser = new JsonParser();
 		Gson gson = new Gson();// create a gson object
 		JsonObject obj = (JsonObject) parser.parse(registerServiceRequestJSON);
-		try{
-			registerServiceRequest = gson.fromJson(obj.get("RegisterServiceRequest").toString(), RegisterServiceRequest.class);
-		}catch(Exception ex){
+		try {
+			registerServiceRequest = gson.fromJson(
+					obj.get("registerServiceRequestObject").toString(),
+					RegisterServiceRequestObject.class);
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+
 		return registerServiceRequest;
-		
+
 	}
 
 	/* User JSON to Java Object */

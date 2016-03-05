@@ -35,6 +35,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class User
 {
+	private int UserId;
 	
     private String UserType;
 
@@ -120,7 +121,15 @@ public class User
         this.LastName = LastName;
     }
 
-    @Override
+    public int getUserId() {
+		return UserId;
+	}
+
+	public void setUserId(int userId) {
+		UserId = userId;
+	}
+
+	@Override
     public String toString()
     {
         return "User [UserType = "+UserType+", Email = "+Email+", Address = "+Address+", Password = "+Password+", FirstName = "+FirstName+", PhoneNumber = "+PhoneNumber+", LastName = "+LastName+"]";

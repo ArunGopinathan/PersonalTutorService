@@ -1,5 +1,6 @@
 {
   "RegisterServiceRequest": {
+	"UserId": "1",
     "Category": {
       "CategoryId": "1",
       "CategoryName": "science",
@@ -12,13 +13,14 @@
       "isSubCategoryActive": "1"
     },
     "Availability": {
-      "Days": {
-        "Day": {
-          "Name": "Monday",
+     "days":[
+    {"Name": "Mon",
           "StartTime": "19:00",
-          "EndTime": "20:00"
-        }
-      }
+          "EndTime": "20:00"}, 
+    {"Name": "Tue",
+          "StartTime": "19:00",
+          "EndTime": "20:00"}
+			]
     },
     "PricePerHour": "150",
     "WillingToTravelInMiles": "15",

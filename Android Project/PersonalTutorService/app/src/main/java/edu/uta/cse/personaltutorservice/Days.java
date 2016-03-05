@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.uta.cse.webservice.pts;
+package edu.uta.cse.personaltutorservice;
 
 public class Days {
 	private String Name;
