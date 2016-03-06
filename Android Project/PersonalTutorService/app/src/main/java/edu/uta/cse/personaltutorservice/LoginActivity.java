@@ -184,6 +184,18 @@ public class LoginActivity extends Activity {
                 SharedPreferences sharedPreferences = getSharedPreferences("MyPref",MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("UserId", String.valueOf(user.getUserId()));
+                editor.putString("FirstName", user.getFirstName());
+                editor.putString("LastName", user.getLastName());
+                editor.putString("Email",user.getEmail());
+                editor.putString("PhoneNumber",user.getPhoneNumber());
+                String address = user.getAddress().getAddressLine1()+", ";
+                if(user.getAddress().getAddressLine2()!=""){
+                    address+=user.getAddress().getAddressLine2()+", ";
+                }
+                address+=user.getAddress().getCity()+", ";
+                address+=user.getAddress().getState()+"- ";
+                address+=user.getAddress().getZipCode();
+                editor.putString("Address",address);
                 editor.commit();
                 startActivity(mainIntent);
             }

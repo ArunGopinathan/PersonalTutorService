@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,8 +24,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -33,6 +40,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -42,6 +50,8 @@ public class registerTutorService_Fragment extends Fragment {
     DateFormat fmtDateAndTime = DateFormat.getDateTimeInstance();
     public static String hostname = "http://personaltutor.uta.ngrok.io/PersonalTutorServiceWebService/PTSWebService/";
     public static String registerTutorServiceMethod = "RegisterTutorService";
+    public static String getCategoriesMethod = "GetAllCategories";
+    public static String getSubCategoriesMethod = "GetSubCategoriesForCategory";
     final Calendar dateAndTime = Calendar.getInstance();
     View rootView;
     SeekBar priceSeekBar;
@@ -52,11 +62,15 @@ public class registerTutorService_Fragment extends Fragment {
     CheckBox cbMon, cbTue, cbWed, cbThu, cbFri, cbSat, cbSun;
     TextView labelPrice;
     boolean[] days = {false, false, false, false, false, false, false};
+   Categories categories;
+    SubCategories subCategories;
     String[] dayNames = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
     Spinner travelInMilesSpinner;
     ProgressBar progressBar;
     String requestJson = "",registerResult="";
     int userId;
+    int categoryId;
+    HashMap<String,Integer> categoriesHM = new HashMap<String, Integer>();
 
     @Nullable
     @Override
@@ -79,10 +93,14 @@ public class registerTutorService_Fragment extends Fragment {
         //  btnSetEndTime = (Button) rootView.findViewById(R.id.btnSetEndTime);
         btnRegisterTutorService = (Button) rootView.findViewById(R.id.registerTutorServiceBtn);
         tvCategory = (AutoCompleteTextView) rootView.findViewById(R.id.categoryAutoCompleteTextView);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.registerServiceProgress);
+        getAllCategoriesAsyncTask task = new getAllCategoriesAsyncTask();
+        task.execute();
+
         tvSubCategory = (AutoCompleteTextView) rootView.findViewById(R.id.subCategoryAutoCompleteTextView);
         labelPrice = (TextView) rootView.findViewById(R.id.labelPrice);
         travelInMilesSpinner = (Spinner) rootView.findViewById(R.id.travelInMilesSpinner);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.registerServiceProgress);
+
 
         cbMon = (CheckBox) rootView.findViewById(R.id.checkBoxMon);
         cbMon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -453,7 +471,170 @@ public String registerTutorService(){
             }
         return result;
     }
+public void getAllCategories(){
+    boolean isavailable = false;
+    String result = "";
+    DefaultHttpClient httpclient = new DefaultHttpClient();
+    try {
+        String url = hostname + getCategoriesMethod ;
+        HttpGet getRequest = new HttpGet(url);
+        HttpResponse httpResponse = httpclient.execute(getRequest);
+        HttpEntity entity = httpResponse.getEntity();
+        Log.w("PTS-Android", httpResponse.getStatusLine().toString());
+        if (entity != null) {
+            result = EntityUtils.toString(entity);
+            Log.w("PTS-Android", "Entity : " + result);
+            JsonParser parser = new JsonParser();
+            Gson gson = new Gson();// create a gson object
+            JsonObject obj = (JsonObject) parser.parse(result);
+            categories = gson.fromJson(result,Categories.class);
 
+
+            if (result.equals("YES")) {
+                isavailable = false;
+            } else
+                isavailable = true;
+        }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    } finally {
+        // When HttpClient instance is no longer needed,
+        // shut down the connection manager to ensure
+        // immediate deallocation of all system resources
+        httpclient.getConnectionManager().shutdown();
+    }
+
+}
+    public void getAllCategoriesForCategory(){
+        boolean isavailable = false;
+        String result = "";
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        try {
+            String url = hostname + getSubCategoriesMethod +"/"+categoryId;
+            Log.w("PTS-Android",url);
+            HttpGet getRequest = new HttpGet(url);
+            HttpResponse httpResponse = httpclient.execute(getRequest);
+            HttpEntity entity = httpResponse.getEntity();
+            Log.w("PTS-Android", httpResponse.getStatusLine().toString());
+            if (entity != null) {
+                result = EntityUtils.toString(entity);
+                Log.w("PTS-Android", "Entity : " + result);
+                JsonParser parser = new JsonParser();
+                Gson gson = new Gson();// create a gson object
+              //  JsonObject obj = (JsonObject) parser.parse(result);
+                subCategories = gson.fromJson(result,SubCategories.class);
+
+                if (result.equals("YES")) {
+                    isavailable = false;
+                } else
+                    isavailable = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            // When HttpClient instance is no longer needed,
+            // shut down the connection manager to ensure
+            // immediate deallocation of all system resources
+            httpclient.getConnectionManager().shutdown();
+        }
+
+    }
+    private class getAllSubCategoryForCategoryAsyncTask extends AsyncTask<Void, Void,Void>{
+        @Override
+        protected void onPreExecute() {
+           progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+          //  super.onProgressUpdate(values);
+            progressBar.animate();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            getAllCategoriesForCategory();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+          //  super.onPostExecute(aVoid);
+            progressBar.setVisibility(View.GONE);
+            String[] subcategoriesArray = new String[subCategories.getSubCategories().length];
+            for(int i=0;i<subCategories.getSubCategories().length;i++){
+                subcategoriesArray[i] = subCategories.getSubCategories()[i].getSubCategoryName();
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, subcategoriesArray);
+            tvSubCategory.setAdapter(adapter);
+            tvSubCategory.showDropDown();
+            tvSubCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tvSubCategory.showDropDown();
+                }
+            });
+
+        }
+    }
+
+    private class getAllCategoriesAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            getAllCategories();
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            //super.onProgressUpdate(values);
+            progressBar.animate();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+          //  super.onPostExecute(aVoid);
+            progressBar.setVisibility(View.GONE);
+           for(int i=0;i<categories.getCategories().length;i++){
+               categoriesHM.put(categories.getCategories()[i].getCategoryName(), Integer.parseInt(categories.getCategories()[i].getCategoryId()));
+           }
+            String[] categories = new String[categoriesHM.size()];
+            categories = (new ArrayList<String>(categoriesHM.keySet())).toArray(categories);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, categories);
+            tvCategory.setAdapter(adapter);
+            tvCategory.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        tvCategory.showDropDown();
+                    }
+                }
+            });
+            tvCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tvCategory.showDropDown();
+                }
+            });
+            tvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                   // Log.w("PTS-Android", parent.getItemAtPosition(position).toString());
+                    String key = parent.getItemAtPosition(position).toString();
+                     categoryId = categoriesHM.get(key);
+                    getAllSubCategoryForCategoryAsyncTask task = new getAllSubCategoryForCategoryAsyncTask();
+                    task.execute();
+
+                }
+            });
+
+        }
+    }
     private class registerTutorServiceAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -471,6 +652,8 @@ public String registerTutorService(){
             progressBar.setVisibility(View.GONE);
             if (registerResult.equals("YES")) {
                 Toast.makeText(getActivity(), "Tutor Service Registered Successfully", Toast.LENGTH_SHORT).show();
+
+
 
             } else {
                 Toast.makeText(getActivity(), "Registration Failed, Please Try again Later", Toast.LENGTH_SHORT).show();

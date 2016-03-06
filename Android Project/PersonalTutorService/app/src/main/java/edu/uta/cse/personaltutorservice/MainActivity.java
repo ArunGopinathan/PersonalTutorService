@@ -60,9 +60,12 @@ public class MainActivity extends ActionBarActivity
         switch (position){
 
             case 0:
-                objFragment= new registerTutorService_Fragment();
+                objFragment = new HomeFragment();
                 break;
             case 1:
+                objFragment= new registerTutorService_Fragment();
+                break;
+            case 2:
                 objFragment= new viewTutorProfile_Fragment();
                 break;
         }
@@ -77,9 +80,12 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                mTitle = "Home";
                 break;
             case 2:
+                mTitle = getString(R.string.title_section1);
+                break;
+            case 3:
                 mTitle = getString(R.string.title_section2);
                 break;
             /*case 3:

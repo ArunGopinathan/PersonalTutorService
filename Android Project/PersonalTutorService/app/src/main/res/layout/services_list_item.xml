@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+
+    android:clickable="true">
+
+    <FrameLayout
+        android:id="@+id/service_list_item_frame_layout"
+        android:layout_width="@dimen/circle_radius"
+        android:layout_height="@dimen/circle_radius"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/course_list_item_iv_circle"
+            android:layout_width="@dimen/circle_radius"
+            android:layout_height="@dimen/circle_radius"
+            android:background="@drawable/circle_title"
+            />
+
+        <TextView
+            android:id="@+id/course_list_item_tv_initials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:textAllCaps="true"
+            android:text="C.C"
+            android:textColor="@color/ColorWhite"
+            android:textStyle="bold" />
+
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:layout_toRightOf="@id/service_list_item_frame_layout"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+
+
+
+            <TextView
+                android:id="@+id/service_list_item_tv_maincatagory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Sports - Basketball"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/course_list_item_tv_tutor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/tutor"
+                android:textColor="@color/ColorBlack"
+
+                />
+
+
+            <TextView
+                android:id="@+id/course_list_item_tv_tutor_firstname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/course_list_item_tv_tutor"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Chris"
+                android:textColor="@color/ColorBlack"
+
+                />
+            <TextView
+                android:id="@+id/course_list_item_tv_tutor_lasttname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/course_list_item_tv_tutor_firstname"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Chen"
+                android:textColor="@color/ColorBlack"
+
+                />
+
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+            <RatingBar
+                android:id="@+id/service_list_item_ratingbar"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:progress="60" />
+            <TextView
+                android:id="@+id/service_list_item_tv_num_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="2dp"
+                android:layout_toRightOf="@id/service_list_item_ratingbar"
+                android:text="200"
+                android:textColor="@color/secondaryColor"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/course_list_item_tv_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/service_list_item_tv_num_feedback"
+                android:text="Feedbacks"
+                android:textColor="@color/secondaryColor"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/course_list_item_tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="930 Benge Dr,Arlington"
+            android:textColor="@color/ColorBlack"
+            android:textSize="12sp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <TextView
+            android:id="@+id/course_list_item_tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Description"
+            android:textColor="@color/secondaryColor"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/course_list_item_tv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/course_list_item_tv_mile"
+
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="2.6"
+            android:textColor="@color/secondaryColor"
+            android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/course_list_item_tv_mile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="mi"
+                android:textColor="@color/secondaryColor"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/course_list_item_devider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/secondaryColor"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="10dp"
+        android:visibility="invisible"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+
+

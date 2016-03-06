@@ -11,6 +11,7 @@ package edu.uta.cse.webservice.pts;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -99,6 +100,88 @@ public class PTSWebServiceImpl {
 			helper.disposeConnection();
 		}
 
+		return result;
+	}
+	@Path("GetAllCategories")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getAllCategories(){
+		String result="";
+		MySqlHelper helper = new MySqlHelper();
+		String query = "select CategoryId,CategoryName from category where isCategoryActive=1";
+		try{
+		java.sql.PreparedStatement getAllCategoriesPreparedStatement = helper.conn
+				.prepareStatement(query);
+		
+		ResultSet rs = getAllCategoriesPreparedStatement.executeQuery();
+		Categories categories = new Categories();
+		
+		ArrayList<Category> list = new ArrayList<Category>();
+		while(rs.next()){
+			Category category = new Category();
+			category.setCategoryId(String.valueOf(rs.getInt("CategoryId")));
+			category.setCategoryName(rs.getString("CategoryName"));
+			list.add(category);
+		}
+		Gson gson = new Gson();
+		//String result = "";
+		Category[] catagories =new Category[list.size()];
+		categories.setCategories(list.toArray(catagories));
+	
+		
+			result = gson.toJson(categories, Categories.class);
+			
+		
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		}
+		finally{
+			helper.disposeConnection();
+		}
+		
+		return result;
+	}
+	
+	@Path("GetSubCategoriesForCategory/{CategoryId}")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getAllSubCategoriesForCategory(@PathParam("CategoryId")String categoryId ){
+		String result="";
+		MySqlHelper helper = new MySqlHelper();
+		String query = "select SubCategoryId,SubCategoryName from subcategory where isSubCategoryActive=1 and CategoryId=?";
+		try{
+		java.sql.PreparedStatement getAllSubCategoriesPreparedStatement = helper.conn
+				.prepareStatement(query);
+		getAllSubCategoriesPreparedStatement.setInt(1, Integer.parseInt(categoryId));
+		
+		ResultSet rs = getAllSubCategoriesPreparedStatement.executeQuery();
+		SubCategories subcategories = new SubCategories();
+		
+		ArrayList<SubCategory> list = new ArrayList<SubCategory>();
+		while(rs.next()){
+			SubCategory category = new SubCategory();
+			category.setSubCategoryId(String.valueOf(rs.getInt("SubCategoryId")));
+			category.setSubCategoryName(rs.getString("SubCategoryName"));
+			list.add(category);
+		}
+		Gson gson = new Gson();
+		//String result = "";
+		SubCategory[] catagories =new SubCategory[list.size()];
+		subcategories.setSubCategories(list.toArray(catagories));
+	
+		
+			result = gson.toJson(subcategories, SubCategories.class);
+			
+		
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		}
+		finally{
+			helper.disposeConnection();
+		}
+		
 		return result;
 	}
 

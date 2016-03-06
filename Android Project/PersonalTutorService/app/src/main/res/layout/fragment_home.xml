@@ -1,0 +1,63 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.uta.cse.personaltutorservice.HomeFragment"
+    android:background="@mipmap/backgrounddesign5">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText"
+            android:textSize="18dp"
+            android:text="Welcome !"
+            android:layout_above="@+id/labelQuickSummary"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/userName"
+            android:textSize="18dp"
+            android:text="Undefined"
+
+            android:layout_below="@+id/logOutButton"
+            android:layout_alignEnd="@+id/logOutButton"
+            android:layout_marginEnd="55dp" />
+
+<TextView
+    android:padding="15dp"
+    android:id="@+id/labelQuickSummary"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="18dp"
+    android:text="Quick Summary:"
+    android:layout_below="@+id/userName"/>
+            <include
+                layout="@layout/services_list_item"
+                android:layout_width="wrap_content"
+                android:layout_height="120dp"
+                android:layout_below="@+id/labelQuickSummary"/>
+
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log out"
+            android:id="@+id/logOutButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+
+
+
+    </RelativeLayout>
+
+
+</FrameLayout>

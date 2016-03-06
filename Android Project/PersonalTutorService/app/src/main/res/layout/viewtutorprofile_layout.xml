@@ -1,12 +1,324 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:gravity="center_horizontal">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frag_update_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:background="@mipmap/backgrounddesign5"
+    >
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="View Tutor Profile"
-        android:id="@+id/textView" />
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="* "
+                        android:textColor="@android:color/holo_red_dark"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="First Name"/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/update_iv_firstname"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_edit"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/update_et_firstname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:editable="false" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <!--<TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="* "
+                    android:textColor="@android:color/holo_red_dark"/>-->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last Name"
+                    android:id="@+id/textView2" />
+
+                <ImageView
+                    android:id="@+id/update_iv_lastname"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_edit"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/update_et_lastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:editable="false" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="* "
+                        android:textColor="@android:color/holo_red_dark"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email"/>
+
+                </LinearLayout>
+                <ImageView
+                    android:id="@+id/update_iv_email_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/email"
+                    android:visibility="visible"
+
+                    android:layout_alignParentTop="true"
+                    android:layout_toStartOf="@+id/update_iv_email" />
+
+                <ImageView
+                    android:id="@+id/update_iv_email"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_edit"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+
+            <EditText
+                android:id="@+id/update_et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+
+                android:editable="false"/>
+
+
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="* "
+                        android:textColor="@android:color/holo_red_dark"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phone Number"/>
+
+                </LinearLayout>
+                <ImageView
+                    android:id="@+id/update_iv_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_launcher_phone"
+                    android:visibility="visible"
+                    android:layout_alignParentTop="true"
+
+                    android:layout_toStartOf="@+id/update_iv_phonenumber" />
+                <ImageView
+                    android:id="@+id/update_iv_sms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/sms"
+                    android:visibility="visible"
+
+                    android:layout_alignParentTop="true"
+                    android:layout_toStartOf="@+id/update_iv_phone" />
+
+                <ImageView
+                    android:id="@+id/update_iv_phonenumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_edit"
+                    android:visibility="invisible"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/update_et_phonenumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:textStyle="bold"
+                android:editable="false" />
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="* "
+                        android:textColor="@android:color/holo_red_dark"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Address"/>
+
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/update_iv_address"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_edit"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/update_et_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:editable="false"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tutoring:"/>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+           <android.support.v7.widget.CardView
+                android:id="@+id/frag_course_cv_all_service"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_margin="3dp"
+
+                android:elevation="1dp">
+
+                <include
+                    layout="@layout/services_list_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.v7.widget.CardView>
+
+
+
+            <TextView
+                android:id="@+id/update_tv_requiredField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/holo_red_dark"
+                android:text="all text must be filled"
+                android:gravity="left"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/bt_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:layout_marginTop="20dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+
+
+
 </RelativeLayout>
+</ScrollView>

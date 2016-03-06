@@ -80,20 +80,18 @@
         <item>WY</item>
 
 
-
-
     </string-array>
     <string name="title_activity_main">Home</string>
 
     <string name="title_section1">Register Tutor Service</string>
     <string name="title_section2">View Tutor Profile</string>
-   <!-- <string name="title_section3">Section 3</string> -->
-<string name="title_activity_register">Register Service</string>
+    <!-- <string name="title_section3">Section 3</string> -->
+    <string name="title_activity_register">Register Service</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_example">Example action</string>
-
+    <string name="tutor">Tutor: </string>
 
     <string name="enter_category">Enter Category:</string>
     <string name="enter_sub_category">Enter Sub Category:</string>
@@ -111,5 +109,8 @@
         <item>20</item>
         <item>25</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
