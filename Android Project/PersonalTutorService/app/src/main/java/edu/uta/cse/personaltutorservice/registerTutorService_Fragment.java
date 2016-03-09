@@ -288,6 +288,7 @@ public class registerTutorService_Fragment extends Fragment {
         textViewStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.requestFocus();
                 setStartTime();
                 textViewStartTime.setError(null);
             }

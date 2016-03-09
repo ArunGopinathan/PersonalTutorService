@@ -29,7 +29,7 @@
             android:layout_gravity="center"
             android:orientation="vertical"
             android:textAllCaps="true"
-            android:text="C.C"
+            android:text="A.G"
             android:textColor="@color/ColorWhite"
             android:textStyle="bold" />
 
@@ -62,7 +62,7 @@
                 android:layout_alignParentLeft="true"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Sports - Basketball"
+                android:text="Mobile Apps - Android"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -99,7 +99,7 @@
                 android:layout_toRightOf="@id/course_list_item_tv_tutor"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Chris"
+                android:text="Arun"
                 android:textColor="@color/ColorBlack"
 
                 />
@@ -111,7 +111,7 @@
                 android:layout_toRightOf="@id/course_list_item_tv_tutor_firstname"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Chen"
+                android:text="Gopinathan"
                 android:textColor="@color/ColorBlack"
 
                 />
@@ -131,7 +131,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:progress="60" />
+                android:progress="80" />
             <TextView
                 android:id="@+id/service_list_item_tv_num_feedback"
                 android:layout_width="wrap_content"
@@ -159,7 +159,7 @@
             android:layout_marginLeft="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="930 Benge Dr,Arlington"
+            android:text="513 Summit Ave, Arlington, TX - 76013"
             android:textColor="@color/ColorBlack"
             android:textSize="12sp" />
 
@@ -174,7 +174,7 @@
             android:layout_marginLeft="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Description"
+            android:text="complete Android developer course to teach you the skills required for the job"
             android:textColor="@color/secondaryColor"
             android:textSize="12sp" />
 

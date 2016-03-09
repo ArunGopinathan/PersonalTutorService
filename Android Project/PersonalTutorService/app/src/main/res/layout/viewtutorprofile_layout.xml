@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:editable="false" />
+                android:enabled="false" />
 
 
             <RelativeLayout
@@ -96,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:editable="false" />
+                android:enabled="false" />
 
 
             <RelativeLayout
@@ -149,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
 
-                android:editable="false"/>
+                android:enabled="false"/>
 
 
 
@@ -214,7 +214,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:textStyle="bold"
-                android:editable="false" />
+                android:enabled="false" />
 
 
 
@@ -256,7 +256,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:editable="false"/>
+                android:enabled="false"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -313,7 +313,7 @@
                 android:layout_height="wrap_content"
                 android:text="Update"
                 android:layout_marginTop="20dp"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
         </LinearLayout>
 
