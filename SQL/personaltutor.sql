@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 10, 2016 at 07:02 PM
+-- Generation Time: Mar 16, 2016 at 02:57 AM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -65,7 +65,16 @@ CREATE TABLE IF NOT EXISTS `availability` (
   `Day` varchar(10) NOT NULL,
   `StartTime` varchar(10) NOT NULL,
   `EndTime` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `availability`
+--
+
+INSERT INTO `availability` (`AvailabilityId`, `ServiceId`, `UserId`, `Day`, `StartTime`, `EndTime`) VALUES
+(4, 9, 20, 'Mon', '08:00 PM', '11:00 PM'),
+(5, 9, 20, 'Tue', '08:00 PM', '11:00 PM'),
+(6, 9, 20, 'Wed', '08:00 PM', '11:00 PM');
 
 -- --------------------------------------------------------
 
@@ -180,21 +189,16 @@ CREATE TABLE IF NOT EXISTS `service` (
   `SubCategoryId` int(11) NOT NULL,
   `PricePerHour` int(11) NOT NULL,
   `DistanceWillingToTravelInMiles` int(11) NOT NULL,
-  `AvgRating` int(11) NOT NULL,
+  `AvgRating` int(11) DEFAULT NULL,
   `isAdvertised` varchar(3) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `service`
 --
 
 INSERT INTO `service` (`ServiceId`, `UserId`, `CategoryId`, `SubCategoryId`, `PricePerHour`, `DistanceWillingToTravelInMiles`, `AvgRating`, `isAdvertised`) VALUES
-(3, 20, 1, 3, 40, 5, 0, 'NO'),
-(4, 20, 2, 4, 60, 20, 0, 'NO'),
-(5, 20, 2, 6, 30, 10, 0, 'NO'),
-(6, 20, 2, 4, 17, 20, 0, 'NO'),
-(7, 20, 1, 3, 20, 20, 0, 'NO'),
-(8, 20, 5, 11, 20, 20, 0, 'NO');
+(9, 20, 4, 7, 46, 20, NULL, 'NO');
 
 -- --------------------------------------------------------
 
@@ -387,7 +391,7 @@ MODIFY `AddressId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
 -- AUTO_INCREMENT for table `availability`
 --
 ALTER TABLE `availability`
-MODIFY `AvailabilityId` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `AvailabilityId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `category`
 --
@@ -412,7 +416,7 @@ MODIFY `ReviewId` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `service`
 --
 ALTER TABLE `service`
-MODIFY `ServiceId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+MODIFY `ServiceId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `state_lkp`
 --

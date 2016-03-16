@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -289,6 +290,8 @@ public class registerTutorService_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 v.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 setStartTime();
                 textViewStartTime.setError(null);
             }
@@ -304,6 +307,8 @@ public class registerTutorService_Fragment extends Fragment {
         textViewEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 setEndTime();
                 textViewEndTime.setError(null);
             }

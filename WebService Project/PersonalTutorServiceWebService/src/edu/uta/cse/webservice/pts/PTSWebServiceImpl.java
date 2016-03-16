@@ -85,13 +85,15 @@ public class PTSWebServiceImpl {
 				subcategoryId = insertSubCategory(helper, request
 						.getSubCategory().getSubCategoryName(), categoryId);
 			}
-			deleteExistingAvailability(helper, request.getUserId());
+			int pricePerHour = Integer.parseInt(request.getPricePerHour().split(" ")[0]);
+			int serviceId = insertService(helper,request.getUserId(), categoryId,subcategoryId,pricePerHour,Integer.parseInt(request.getWillingToTravelInMiles()),request.getAdvertise());
+		//	deleteExistingAvailability(helper, request.getUserId());
 			//insert availability
 			for (Days day : request.getAvailability().getDays()) {
-				insertAvailability(helper, day, request.getUserId());
+				insertAvailability(helper, day, request.getUserId(),serviceId);
 			}
-			int pricePerHour = Integer.parseInt(request.getPricePerHour().split(" ")[0]);
-			insertService(helper,request.getUserId(), categoryId,subcategoryId,pricePerHour,Integer.parseInt(request.getWillingToTravelInMiles()),request.getAdvertise());
+			
+			
 			result = "YES";
 
 		} catch (Exception ex) {
@@ -242,13 +244,13 @@ public class PTSWebServiceImpl {
 
 	}
 
-	public void insertService(MySqlHelper helper,int UserId, int CategoryId, int SubCategoryId, int pricePerHour, int Distance, String isAdvertised ){
+	public int insertService(MySqlHelper helper,int UserId, int CategoryId, int SubCategoryId, int pricePerHour, int Distance, String isAdvertised ){
 		String query = "insert into service(UserId, CategoryId, SubCategoryId, PricePerHour, DistanceWillingToTravelInMiles, isAdvertised) values(?,?,?,?,?,?)";
 		try {
 
 			
 			java.sql.PreparedStatement insertServiceStatement = helper.conn
-					.prepareStatement(query);
+					.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			insertServiceStatement.setInt(1, UserId);
 			insertServiceStatement.setInt(2, CategoryId);
 			insertServiceStatement.setInt(3, SubCategoryId);
@@ -257,22 +259,29 @@ public class PTSWebServiceImpl {
 			insertServiceStatement.setString(6, isAdvertised);
 			
 			insertServiceStatement.executeUpdate();
+			ResultSet rs = insertServiceStatement.getGeneratedKeys();
+			if (rs.next()) {
+				int last_inserted_id = rs.getInt(1);
+				return last_inserted_id;
+			}
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return -1;
 	}
-	public void insertAvailability(MySqlHelper helper, Days day, int UserId) {
+	public void insertAvailability(MySqlHelper helper, Days day, int UserId,int ServiceId) {
 		String query = "";
 		try {
 
-			query = "insert into availability(UserId,Day,StartTime,EndTime) values(?,?,?,?)";
+			query = "insert into availability(UserId,Day,StartTime,EndTime,ServiceId) values(?,?,?,?,?)";
 			java.sql.PreparedStatement insertAvailabilityStatement = helper.conn
 					.prepareStatement(query);
 			insertAvailabilityStatement.setInt(1, UserId);
 			insertAvailabilityStatement.setString(2, day.getName());
 			insertAvailabilityStatement.setString(3, day.getStartTime());
 			insertAvailabilityStatement.setString(4, day.getEndTime());
+			insertAvailabilityStatement.setInt(5, ServiceId);
 
 			insertAvailabilityStatement.executeUpdate();
 		} catch (Exception ex) {
