@@ -104,7 +104,7 @@ public class PTSWebServiceImpl {
 
 		return result;
 	}
-	@Path("GetAllCategories")
+	@Path("/GetAllCategories")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getAllCategories(){
@@ -132,6 +132,64 @@ public class PTSWebServiceImpl {
 	
 		
 			result = gson.toJson(categories, Categories.class);
+			
+		
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		}
+		finally{
+			helper.disposeConnection();
+		}
+		
+		return result;
+	}
+	
+	@Path("GetNearestTutors/{Lattitude}/{Longitude}")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getNearestTutors(@PathParam("Lattitude")String lattitude, @PathParam("Longitude") String longitude ){
+		String result="";
+		MySqlHelper helper = new MySqlHelper();
+		String query = "SELECT addressid, ( 3959 * acos( cos( radians('"+lattitude+"') ) * cos( radians( lattitude ) ) * cos( radians( longitude ) - radians('"+longitude+"') ) + sin( radians('"+lattitude+"') ) * sin( radians( lattitude ) ) )) AS distance FROM address HAVING distance < 25 ORDER BY distance LIMIT 0 , 20";
+		//String query = "call getnearesttutor('"+lattitude+"','"+longitude+"')";
+		try{
+			System.out.println(query);
+		java.sql.PreparedStatement getnearestTutorPreparedStatement = helper.conn
+				.prepareStatement(query);
+		
+		
+		ResultSet rs = getnearestTutorPreparedStatement.executeQuery();
+		ArrayList<Integer> addressList = new ArrayList<Integer>();
+		while(rs.next()){
+			System.out.print(rs.getInt("addressid"));
+			addressList.add(rs.getInt("addressid"));
+			System.out.print("\t"+rs.getFloat("distance")+"\n");
+		}
+		
+		query = "select * from address a inner join login l on a.userid=l.userid inner join service s on s.userid = l.userid where addressid in(";
+		for(int addressId : addressList){
+			query+="'"+addressId+"',";
+		}
+		rs = null;
+		query =query.substring(0,query.length()-1)+")";
+		System.out.println(query);
+		getnearestTutorPreparedStatement = helper.conn
+				.prepareStatement(query);
+		 rs = getnearestTutorPreparedStatement.executeQuery();
+		while(rs.next()){
+			System.out.print(rs.getInt("userid"));
+			
+			System.out.print("\t"+rs.getString("Lattitude")+"");
+			System.out.print("\t"+rs.getString("Longitude")+"");
+			System.out.print("\t"+rs.getInt("ServiceId")+"\n");
+		}
+		//Gson gson = new Gson();
+		//String result = "";
+		
+	
+		
+			
 			
 		
 		}
@@ -202,6 +260,7 @@ public class PTSWebServiceImpl {
 		return result;
 	}
 
+	
 	@Path("/Authenticate/{username}/{password}")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)

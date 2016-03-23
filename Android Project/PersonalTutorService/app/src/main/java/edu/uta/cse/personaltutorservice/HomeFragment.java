@@ -1,6 +1,7 @@
 package edu.uta.cse.personaltutorservice;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,7 +32,7 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     View rootView;
-    Button logOutButton;
+    Button logOutButton,mapsButton;
     TextView userNameTV;
     private OnFragmentInteractionListener mListener;
 
@@ -77,6 +78,14 @@ public class HomeFragment extends Fragment {
         String greetingName = LastName+", "+firstName;
         userNameTV = (TextView) rootView.findViewById(R.id.userName);
         userNameTV.setText(greetingName);
+        mapsButton = (Button) rootView.findViewById(R.id.btnNearbyPlaces);
+        mapsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent  = new Intent(getActivity(),NearbyTutorsActivity.class);
+                startActivity(intent);
+            }
+        });
         logOutButton = (Button)rootView.findViewById(R.id.logOutButton);
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override

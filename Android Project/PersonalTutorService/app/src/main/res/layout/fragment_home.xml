@@ -55,6 +55,13 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true" />
 
+        <Button android:id="@+id/btnNearbyPlaces"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Show Nearby Tutors"
+            android:layout_below="@+id/labelQuickSummary"
+            />
+
 
 
     </RelativeLayout>
