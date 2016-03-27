@@ -196,6 +196,8 @@ public class LoginActivity extends Activity {
                 address+=user.getAddress().getState()+"- ";
                 address+=user.getAddress().getZipCode();
                 editor.putString("Address",address);
+                editor.putString("User-Lattitude",user.getAddress().getLattitude());
+                editor.putString("User-Longitude",user.getAddress().getLongitude());
                 editor.commit();
                 startActivity(mainIntent);
             }

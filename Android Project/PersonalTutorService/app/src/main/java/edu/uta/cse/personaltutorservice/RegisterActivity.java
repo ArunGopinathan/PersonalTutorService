@@ -102,6 +102,7 @@ public class RegisterActivity extends ActionBarActivity {
         cityEditText = (EditText) findViewById(R.id.txtCity);
         stateEditText = (AutoCompleteTextView) findViewById(R.id.txtState);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, states);
+
         stateEditText.setAdapter(adapter);
         zipEditText = (EditText) findViewById(R.id.txtZipCode);
 
@@ -214,9 +215,7 @@ public class RegisterActivity extends ActionBarActivity {
                     //validate the address
                     ValidateAddressAsyncTask validateTask = new ValidateAddressAsyncTask();
                     validateTask.execute();
-                    //register the address
-                    RegisterAsyncTask registerTask = new RegisterAsyncTask();
-                    registerTask.execute();
+
                 }
                 else{
                     Toast.makeText(RegisterActivity.this, "Some Field is buggy", Toast.LENGTH_SHORT).show();
@@ -381,6 +380,12 @@ public class RegisterActivity extends ActionBarActivity {
             if(isAddressValidated==false){
                 addressLine1Text.setError("Invalid Address");
             }
+            else{
+                //register the address
+
+                RegisterAsyncTask registerTask = new RegisterAsyncTask();
+                registerTask.execute();
+            }
         }
 
         @Override
@@ -482,6 +487,8 @@ public class RegisterActivity extends ActionBarActivity {
         protected void onPreExecute() {
             //  super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
+
+
             generateRegisterJson();
         }
 

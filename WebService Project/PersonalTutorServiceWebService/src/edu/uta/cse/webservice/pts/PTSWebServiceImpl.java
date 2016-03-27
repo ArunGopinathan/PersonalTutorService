@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -20,13 +21,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mysql.jdbc.PreparedStatement;
-import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 /*
  * localhost link :
@@ -144,6 +141,118 @@ public class PTSWebServiceImpl {
 		
 		return result;
 	}
+	@Path("GetAllServiceByUsername/{username}")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String GetAllServiceByUsername(@PathParam("username") String username){
+
+		String result = "";
+		Service s = new Service();
+
+		MySqlHelper helper = new MySqlHelper();
+		String query = "select * "+
+						"from login l inner join service s on l.UserId = s.UserId "+
+						"inner join personalinfo p on s.UserId = p.UserId "+
+						"inner join address a on p.UserId = a.UserId "+
+						"inner join category c on s.CategoryId = c.CategoryId "+
+						"inner join subcategory sc on s.SubCategoryId = sc.SubCategoryId "+
+						"where Email = ?";
+		System.out.println(query);
+		try {
+			java.sql.PreparedStatement getServicePreparedStatement = helper.conn
+					.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			getServicePreparedStatement.setString(1, username);
+			ResultSet rs =  getServicePreparedStatement.executeQuery();
+			ArrayList<Service> list = new ArrayList<Service>();
+			Services services = new Services();
+			while(rs.next()){
+				Address address = new Address();
+				address.setAddressLine1(rs.getString("AddressLine1"));
+				address.setAddressLine2(rs.getString("AddressLine2"));
+				address.setCity(rs.getString("City"));
+				address.setState(rs.getString("State"));
+				address.setZipCode(rs.getString("ZipCode"));
+				address.setLattitude(rs.getString("Lattitude"));
+				address.setLongitude(rs.getString("Longitude"));
+				s.setAddress(address);
+				s.setAvgRating(rs.getInt("AvgRating"));
+				Category c = new Category();
+				c.setCategoryName(rs.getString("CategoryName"));
+				s.setCategory(c);
+				SubCategory sc = new SubCategory();
+				sc.setSubCategoryName(rs.getString("SubCategoryName"));
+				s.setSubCategory(sc);
+				//s.setDescription(rs.getString("Description"));
+				s.setIsAdvertisment(rs.getString("isAdvertised"));
+				s.setMiles(rs.getDouble("DistanceWillingToTravelInMiles"));
+				s.setNumOfFeedbacks(rs.getInt("NumOfFeedback"));
+				User u = new User();
+				u.setFirstName(rs.getString("FirstName"));
+				u.setLastName(rs.getString("LastName"));
+				s.setUser(u);
+				list.add(s);
+			}
+			Gson gson = new Gson();
+			Service[] ss = new Service[list.size()];
+			services.setServices(list.toArray(ss));
+			result = gson.toJson(services, Services.class);
+			
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return result;
+	}
+	public UpdateProfileRequestObject parseUpdateProfileRequestJsonToJavaObject(
+			String UpdateProfileRequestJSON) {
+		UpdateProfileRequestObject updateProfileRequest = new UpdateProfileRequestObject();
+		JsonParser parser = new JsonParser();
+		Gson gson = new Gson();// create a gson object
+		JsonObject obj = (JsonObject) parser.parse(UpdateProfileRequestJSON);
+		try {
+			 updateProfileRequest = gson.fromJson(
+					obj.get("updateProfileRequestObject").toString(),
+					UpdateProfileRequestObject.class);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return updateProfileRequest;
+
+	}
+	@POST
+	@Path("UpdateTutorInfo")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String UpdateTutorInfo(String requestJson){
+		String result = "NO";
+		UpdateProfileRequestObject request = null;
+		request = parseUpdateProfileRequestJsonToJavaObject(requestJson);
+		MySqlHelper helper = new MySqlHelper();
+		String query = 
+				"update (personalinfo p inner join login l on p.UserId = l.UserId )"+
+					   "set FirstName = ?, LastName = ?, PhoneNumber = ? where Email = ?";
+		System.out.println(query);
+		System.out.println(request.getFirstname()+request.getLastname()+request.getPhonenumber()+request.getEmail());
+		try{
+			java.sql.PreparedStatement updateProfilePreparedStatement = helper.conn.prepareStatement(query);
+			updateProfilePreparedStatement.setString(1, request.getFirstname());
+			updateProfilePreparedStatement.setString(2, request.getLastname());
+			updateProfilePreparedStatement.setString(3, request.getPhonenumber());
+			updateProfilePreparedStatement.setString(4, request.getEmail());
+			updateProfilePreparedStatement.executeUpdate();
+			
+			//System.out.println(updateProfilePreparedStatement);
+			
+			result = "YES";
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			helper.disposeConnection();
+		}
+		
+		return result;
+	}
+	
 	
 	@Path("GetNearestTutors/{Lattitude}/{Longitude}")
 	@GET
@@ -161,13 +270,15 @@ public class PTSWebServiceImpl {
 		
 		ResultSet rs = getnearestTutorPreparedStatement.executeQuery();
 		ArrayList<Integer> addressList = new ArrayList<Integer>();
+		HashMap<Integer,Float> distanceLookUp = new HashMap<Integer,Float>();
 		while(rs.next()){
 			System.out.print(rs.getInt("addressid"));
+			distanceLookUp.put(rs.getInt("addressid"), rs.getFloat("distance"));
 			addressList.add(rs.getInt("addressid"));
 			System.out.print("\t"+rs.getFloat("distance")+"\n");
 		}
 		
-		query = "select * from address a inner join login l on a.userid=l.userid inner join service s on s.userid = l.userid where addressid in(";
+		query = "select * from address a inner join login l on a.userid=l.userid inner join service s on s.userid = l.userid  inner join category c on c.categoryid = s.categoryid inner join subcategory sc on sc.subcategoryid = s.subcategoryid inner join personalinfo p on l.userid = p.userid where a.addressid in(";
 		for(int addressId : addressList){
 			query+="'"+addressId+"',";
 		}
@@ -177,16 +288,37 @@ public class PTSWebServiceImpl {
 		getnearestTutorPreparedStatement = helper.conn
 				.prepareStatement(query);
 		 rs = getnearestTutorPreparedStatement.executeQuery();
+		 NearbyServicesResponse response = new NearbyServicesResponse();
+		 ArrayList<Service> services_list = new ArrayList<Service>();
 		while(rs.next()){
-			System.out.print(rs.getInt("userid"));
+			Service service = new Service();
 			
-			System.out.print("\t"+rs.getString("Lattitude")+"");
-			System.out.print("\t"+rs.getString("Longitude")+"");
-			System.out.print("\t"+rs.getInt("ServiceId")+"\n");
+			User user = new User();
+			user.setUserId(rs.getInt("userid"));
+			service.setUser(user);
+			//System.out.print(rs.getInt("userid"));
+			service.setServiceLattitude(rs.getString("Lattitude"));
+			service.setServiceLongitude(rs.getString("Longitude"));
+			
+			service.setServiceId(rs.getInt("ServiceId")+"");
+			
+			service.setServiceName(rs.getString("SubCategoryName")+" by "+rs.getString("LastName"));
+			
+			service.setMiles((double) distanceLookUp.get(rs.getInt("AddressId")));
+			
+			services_list.add(service);
+			//System.out.print("\t"+rs.getString("Lattitude")+"");
+			//System.out.print("\t"+rs.getString("Longitude")+"");
+			//System.out.print("\t"+rs.getInt("ServiceId")+"\n");
 		}
-		//Gson gson = new Gson();
+		Services services = new Services();
+		Service[] service = new Service[services_list.size()];
+		service = services_list.toArray(service);
+		services.setServices(service);
+		response.setServices(services);
+		Gson gson = new Gson();
 		//String result = "";
-		
+		result = gson.toJson(response, NearbyServicesResponse.class);
 	
 		
 			
