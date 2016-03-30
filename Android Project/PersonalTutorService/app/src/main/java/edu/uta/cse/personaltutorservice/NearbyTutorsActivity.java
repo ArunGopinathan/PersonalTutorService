@@ -1,5 +1,6 @@
 package edu.uta.cse.personaltutorservice;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
@@ -29,6 +30,8 @@ import org.apache.http.util.EntityUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.security.auth.Subject;
 
 public class NearbyTutorsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
@@ -75,7 +78,7 @@ public class NearbyTutorsActivity extends FragmentActivity implements OnMapReady
                     LatLng userLocation = new LatLng(Double.parseDouble(s.getServiceLattitude()),Double.parseDouble(s.getServiceLongitude()));
 
                     Marker marker = mMap.addMarker(new MarkerOptions().position(userLocation).title("My Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                    idtoUserId.put(marker.getId(),s.getUser().getUserId()+"");
+                  //  idtoUserId.put(marker.getId(),s.getUser().getUserId()+"");
                     builder.include(userLocation);
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
                 }
@@ -85,7 +88,8 @@ public class NearbyTutorsActivity extends FragmentActivity implements OnMapReady
                     builder.include(serviceLocation);
                     String miles = df.format(s.getMiles());
                     Marker marker = mMap.addMarker(new MarkerOptions().position(serviceLocation).title(s.getServiceName() + "(" + miles + " miles)"));
-                    idtoUserId.put(marker.getId(),s.getUser().getUserId()+"");
+                   // idtoUserId.put(marker.getId(),s.getUser().getUserId()+"");
+                    idtoUserId.put(marker.getId(),s.getServiceId()+"");
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(serviceLocation));
                 }
             }
@@ -108,8 +112,10 @@ public class NearbyTutorsActivity extends FragmentActivity implements OnMapReady
     public void onInfoWindowClick(Marker marker){
         Log.w("PTS-Android",marker.getId());
 
-            Log.w("PTS-Android", "User Id -->" + idtoUserId.get(marker.getId()));
-
+            Log.w("PTS-Android", "Service Id -->" + idtoUserId.get(marker.getId()));
+        Intent intent = new Intent(getApplicationContext(), SubjectProfileActivity.class);
+        intent.putExtra("SERVICE_ID", idtoUserId.get(marker.getId()));
+        startActivity(intent);
 
     }
     private String getNearestTutors(){
@@ -160,6 +166,7 @@ public class NearbyTutorsActivity extends FragmentActivity implements OnMapReady
 
             if(services.getServices().getServices().length==1 && services.getServices().getServices()[0].getUser().getUserId()==Integer.parseInt(userId) ){
                 Toast.makeText(NearbyTutorsActivity.this, "No Services Available near your location", Toast.LENGTH_SHORT).show();
+                onMapReady(mMap);
             }
             else{
                 //call the on map ready because we got the service nw only

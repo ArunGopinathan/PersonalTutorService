@@ -40,6 +40,7 @@
     android:text="Quick Summary:"
     android:layout_below="@+id/userName"/>
             <include
+                android:id="@+id/quicksummary"
                 layout="@layout/services_list_item"
                 android:layout_width="wrap_content"
                 android:layout_height="120dp"
@@ -59,7 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="Show Nearby Tutors"
-            android:layout_below="@+id/labelQuickSummary"
+            android:layout_below="@+id/quicksummary"
+
             />
 
 

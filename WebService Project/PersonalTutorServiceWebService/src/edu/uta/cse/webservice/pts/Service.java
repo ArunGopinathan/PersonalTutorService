@@ -29,10 +29,22 @@ public class Service
     private double miles;
     private String isAdvertisment;
     private User User;
+    private String PricePerHour;
+   
+    public String getPricePerHour ()
+    {
+        return PricePerHour;
+    }
+
+    public void setPricePerHour (String PricePerHour)
+    {
+        this.PricePerHour = PricePerHour;
+    }
     public String getServiceLattitude ()
     {
         return ServiceLattitude;
     }
+    
 
     public void setServiceLattitude (String ServiceLattitude)
     {

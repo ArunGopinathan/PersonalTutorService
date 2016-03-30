@@ -63,6 +63,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.uta.cse.personaltutorservice.LoginActivity" />
         </activity>
+        <activity android:name=".SubjectProfileActivity"></activity>
     </application>
 
 </manifest>

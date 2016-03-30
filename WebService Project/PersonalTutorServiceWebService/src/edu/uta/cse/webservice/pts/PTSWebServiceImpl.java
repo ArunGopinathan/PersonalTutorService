@@ -203,6 +203,73 @@ public class PTSWebServiceImpl {
 		
 		return result;
 	}
+	@Path("GetServiceByServiceId/{serviceid}")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String GetServiceByServiceId(@PathParam("serviceid") String serviceid){
+
+		String result = "";
+		
+
+		MySqlHelper helper = new MySqlHelper();
+		String query = "select * "+
+						"from login l inner join service s on l.UserId = s.UserId "+
+						"inner join personalinfo p on s.UserId = p.UserId "+
+						"inner join address a on p.UserId = a.UserId "+
+						"inner join category c on s.CategoryId = c.CategoryId "+
+						"inner join subcategory sc on s.SubCategoryId = sc.SubCategoryId "+
+						"where serviceid = ?";
+		System.out.println(query);
+		try {
+			java.sql.PreparedStatement getServicePreparedStatement = helper.conn
+					.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			getServicePreparedStatement.setInt(1, Integer.parseInt(serviceid));
+			ResultSet rs =  getServicePreparedStatement.executeQuery();
+			ArrayList<Service> list = new ArrayList<Service>();
+			Services services = new Services();
+			Service s = new Service();
+			while(rs.next()){
+				
+				Address address = new Address();
+				address.setAddressLine1(rs.getString("AddressLine1"));
+				address.setAddressLine2(rs.getString("AddressLine2"));
+				address.setCity(rs.getString("City"));
+				address.setState(rs.getString("State"));
+				address.setZipCode(rs.getString("ZipCode"));
+				address.setLattitude(rs.getString("Lattitude"));
+				address.setLongitude(rs.getString("Longitude"));
+				s.setAddress(address);
+				s.setAvgRating(rs.getInt("AvgRating"));
+				Category c = new Category();
+				c.setCategoryName(rs.getString("CategoryName"));
+				s.setCategory(c);
+				SubCategory sc = new SubCategory();
+				sc.setSubCategoryName(rs.getString("SubCategoryName"));
+				s.setSubCategory(sc);
+				//s.setDescription(rs.getString("Description"));
+				s.setIsAdvertisment(rs.getString("isAdvertised"));
+				s.setMiles(rs.getDouble("DistanceWillingToTravelInMiles"));
+				s.setNumOfFeedbacks(rs.getInt("NumOfFeedback"));
+				s.setPricePerHour(rs.getInt("PricePerHour")+"");
+				User u = new User();
+				u.setFirstName(rs.getString("FirstName"));
+				u.setLastName(rs.getString("LastName"));
+				u.setPhoneNumber(rs.getString("PhoneNumber"));
+				u.setEmail(rs.getString("Email"));
+				s.setUser(u);
+				list.add(s);
+			}
+			Gson gson = new Gson();
+			
+			result = gson.toJson(s, Service.class);Service[] ss = new Service[list.size()];
+			services.setServices(list.toArray(ss));
+			result = gson.toJson(services, Services.class);
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return result;
+	}
 	public UpdateProfileRequestObject parseUpdateProfileRequestJsonToJavaObject(
 			String UpdateProfileRequestJSON) {
 		UpdateProfileRequestObject updateProfileRequest = new UpdateProfileRequestObject();
