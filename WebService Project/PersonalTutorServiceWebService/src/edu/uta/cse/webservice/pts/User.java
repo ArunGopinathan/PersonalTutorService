@@ -50,6 +50,16 @@ public class User
     private String PhoneNumber;
 
     private String LastName;
+    
+    private String initials;
+    
+    public String getInitials() {
+		return initials;
+	}
+
+	public void setInitials(String initials) {
+		this.initials = initials;
+	}
 
     public String getUserType ()
     {

@@ -1,4 +1,4 @@
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +17,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+
+import edu.uta.cse.personaltutorservice.R;
+import edu.uta.cse.personaltutorservice.Model_Objects.Services;
 
 public class SubjectProfileActivity extends AppCompatActivity {
 String serviceId;
@@ -87,24 +90,24 @@ String serviceId;
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            tvCourseName.setText(services.getServices()[0].getSubCategory().getSubCategoryName() + " by" + services.getServices()[0].getUser().getLastName());
-            tvCategory.setText(services.getServices()[0].getCategory().getCategoryName());
-            tvSubCategory.setText(services.getServices()[0].getSubCategory().getSubCategoryName());
-            tvTutorName.setText(services.getServices()[0].getUser().getLastName()+","+services.getServices()[0].getUser().getFirstName());
-            tvTutorName.setText(services.getServices()[0].getPricePerHour());
+            tvCourseName.setText(services.getServices().get(0).getSubCategory().getSubCategoryName() + " by" + services.getServices().get(0).getUser().getLastName());
+            tvCategory.setText(services.getServices().get(0).getCategory().getCategoryName());
+            tvSubCategory.setText(services.getServices().get(0).getSubCategory().getSubCategoryName());
+            tvTutorName.setText(services.getServices().get(0).getUser().getLastName()+","+services.getServices().get(0).getUser().getFirstName());
+            tvTutorName.setText(services.getServices().get(0).getPricePerHour());
             String address ="";
-            address+=services.getServices()[0].getAddress().getAddressLine1();
-            if(services.getServices()[0].getAddress().getAddressLine2()!=""){
-                address+=", "+services.getServices()[0].getAddress().getAddressLine2();
+            address+=services.getServices().get(0).getAddress().getAddressLine1();
+            if(services.getServices().get(0).getAddress().getAddressLine2()!=""){
+                address+=", "+services.getServices().get(0).getAddress().getAddressLine2();
             }
-            address+=","+services.getServices()[0].getAddress().getCity();
-            address+=","+services.getServices()[0].getAddress().getState();
-            address+=","+services.getServices()[0].getAddress().getZipCode();
+            address+=","+services.getServices().get(0).getAddress().getCity();
+            address+=","+services.getServices().get(0).getAddress().getState();
+            address+=","+services.getServices().get(0).getAddress().getZipCode();
 
             tvAddress.setText(address);
-            tvPhoneNumber.setText(services.getServices()[0].getUser().getPhoneNumber());
-            tvPricePerHour.setText(services.getServices()[0].getPricePerHour());
-            tvEmail.setText(services.getServices()[0].getUser().getEmail());
+            tvPhoneNumber.setText(services.getServices().get(0).getUser().getPhoneNumber());
+            tvPricePerHour.setText(services.getServices().get(0).getPricePerHour());
+            tvEmail.setText(services.getServices().get(0).getUser().getEmail());
 
             ((ImageView) findViewById(R.id.update_iv_sms)).setOnClickListener(new View.OnClickListener() {
                 @Override

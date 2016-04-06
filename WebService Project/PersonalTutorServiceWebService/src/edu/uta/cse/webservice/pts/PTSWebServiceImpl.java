@@ -147,7 +147,7 @@ public class PTSWebServiceImpl {
 	public String GetAllServiceByUsername(@PathParam("username") String username){
 
 		String result = "";
-		Service s = new Service();
+		
 
 		MySqlHelper helper = new MySqlHelper();
 		String query = "select * "+
@@ -156,7 +156,7 @@ public class PTSWebServiceImpl {
 						"inner join address a on p.UserId = a.UserId "+
 						"inner join category c on s.CategoryId = c.CategoryId "+
 						"inner join subcategory sc on s.SubCategoryId = sc.SubCategoryId "+
-						"where Email = ?";
+						"where Email = ? order by isAdvertised desc";
 		System.out.println(query);
 		try {
 			java.sql.PreparedStatement getServicePreparedStatement = helper.conn
@@ -166,6 +166,7 @@ public class PTSWebServiceImpl {
 			ArrayList<Service> list = new ArrayList<Service>();
 			Services services = new Services();
 			while(rs.next()){
+				Service s = new Service();
 				Address address = new Address();
 				address.setAddressLine1(rs.getString("AddressLine1"));
 				address.setAddressLine2(rs.getString("AddressLine2"));
@@ -174,8 +175,9 @@ public class PTSWebServiceImpl {
 				address.setZipCode(rs.getString("ZipCode"));
 				address.setLattitude(rs.getString("Lattitude"));
 				address.setLongitude(rs.getString("Longitude"));
+				s.setServiceId(rs.getInt("ServiceId")+"");
 				s.setAddress(address);
-				s.setAvgRating(rs.getInt("AvgRating"));
+				s.setAvgRating(rs.getDouble("AvgRating"));
 				Category c = new Category();
 				c.setCategoryName(rs.getString("CategoryName"));
 				s.setCategory(c);
@@ -189,12 +191,13 @@ public class PTSWebServiceImpl {
 				User u = new User();
 				u.setFirstName(rs.getString("FirstName"));
 				u.setLastName(rs.getString("LastName"));
+				u.setInitials(rs.getString("FirstName").substring(0,1)+"," +
+						rs.getString("LastName").substring(0,1));
 				s.setUser(u);
 				list.add(s);
 			}
 			Gson gson = new Gson();
-			Service[] ss = new Service[list.size()];
-			services.setServices(list.toArray(ss));
+			services.setServices(list);
 			result = gson.toJson(services, Services.class);
 			
 		}catch (Exception ex) {
@@ -256,13 +259,15 @@ public class PTSWebServiceImpl {
 				u.setLastName(rs.getString("LastName"));
 				u.setPhoneNumber(rs.getString("PhoneNumber"));
 				u.setEmail(rs.getString("Email"));
+				u.setInitials(rs.getString("FirstName").substring(0,1)+"," +
+						rs.getString("LastName").substring(0,1));
 				s.setUser(u);
 				list.add(s);
 			}
 			Gson gson = new Gson();
 			
-			result = gson.toJson(s, Service.class);Service[] ss = new Service[list.size()];
-			services.setServices(list.toArray(ss));
+			result = gson.toJson(s, Service.class);
+			services.setServices(list);
 			result = gson.toJson(services, Services.class);
 		}catch (Exception ex) {
 			ex.printStackTrace();
@@ -381,7 +386,7 @@ public class PTSWebServiceImpl {
 		Services services = new Services();
 		Service[] service = new Service[services_list.size()];
 		service = services_list.toArray(service);
-		services.setServices(service);
+		services.setServices(services_list);
 		response.setServices(services);
 		Gson gson = new Gson();
 		//String result = "";

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Model_Objects;
 
 /**
  * @author Arun
@@ -21,15 +21,58 @@ public class Service
     
     private SubCategory SubCategory;
     
-    private Address address;
-    
-    private int avgRating;
+
+    private User User;
+    private String PricePerHour;
+
+
+    private String catagory;
+    private String subCatagory;
+    private String tutorName;
+    private double avgRating;
     private int numOfFeedbacks;
+    private Address address;
     private String description;
     private double miles;
     private String isAdvertisment;
-    private User User;
-    private String PricePerHour;
+    private String initials;
+
+    public String getInitials() {
+        return initials;
+    }
+
+    public void setInitials(String initials) {
+        this.initials = initials;
+    }
+
+    public String getIsAdvertisment() {
+        return isAdvertisment;
+    }
+
+    public String getCatagory() {
+        return catagory;
+    }
+
+    public void setCatagory(String catagory) {
+        this.catagory = catagory;
+    }
+
+    public String getSubCatagory() {
+        return subCatagory;
+    }
+
+    public void setSubCatagory(String subCatagory) {
+        this.subCatagory = subCatagory;
+    }
+
+    public String getTutorName() {
+        return tutorName;
+    }
+
+    public void setTutorName(String tutorName) {
+        this.tutorName = tutorName;
+    }
+
 
     public String getPricePerHour ()
     {
@@ -108,11 +151,11 @@ public class Service
     public void setAddress(Address address) {
         this.address = address;
     }
-    public int getAvgRating() {
+    public double getAvgRating() {
         return avgRating;
     }
 
-    public void setAvgRating(int avgRating) {
+    public void setAvgRating(double avgRating) {
         this.avgRating = avgRating;
     }
     public int getNumOfFeedbacks() {
@@ -124,6 +167,9 @@ public class Service
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+    public String getDescription() {
+        return description;
     }
 
     public double getMiles() {

@@ -1,4 +1,4 @@
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Model_Objects;
 
 /**
  * Created by Arun on 2/15/2016.
@@ -90,10 +90,6 @@ public class Address
         this.AddressLine2 = AddressLine2;
     }
 
-    @Override
-    public String toString()
-    {
-        return "edu.uta.cse.personaltutorservice.Address [State = "+State+", Longitude = "+Longitude+", Lattitude = "+Lattitude+", ZipCode = "+ZipCode+", AddressLine1 = "+AddressLine1+", City = "+City+", AddressLine2 = "+AddressLine2+"]";
-    }
+
 }
 

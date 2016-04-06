@@ -1,4 +1,4 @@
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Activities;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -6,18 +6,17 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import edu.uta.cse.personaltutorservice.Fragments.HomeFragment;
+import edu.uta.cse.personaltutorservice.Fragments.NavigationDrawerFragment;
+import edu.uta.cse.personaltutorservice.R;
+import edu.uta.cse.personaltutorservice.Fragments.registerTutorService_Fragment;
+import edu.uta.cse.personaltutorservice.Fragments.viewTutorProfile_Fragment;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {

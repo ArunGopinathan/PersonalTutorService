@@ -1,4 +1,4 @@
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -28,10 +27,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import javax.security.auth.Subject;
+import edu.uta.cse.personaltutorservice.Request_Objects.NearbyServicesResponse;
+import edu.uta.cse.personaltutorservice.R;
+import edu.uta.cse.personaltutorservice.Model_Objects.Service;
 
 public class NearbyTutorsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
@@ -72,7 +73,9 @@ public class NearbyTutorsActivity extends FragmentActivity implements OnMapReady
         mMap = googleMap;
         mMap.setOnInfoWindowClickListener(this);
         if(services!=null && services.getServices()!=null){
-            Service[] services_list = services.getServices().getServices();
+            //Services list = new Services();
+            List<Service> list = services.getServices().getServices();
+            Service[] services_list = list.toArray(new Service[list.size()]);
             for(Service s : services_list){
                 if(s.getUser().getUserId() == Integer.parseInt(userId)) {
                     LatLng userLocation = new LatLng(Double.parseDouble(s.getServiceLattitude()),Double.parseDouble(s.getServiceLongitude()));
@@ -164,7 +167,7 @@ public class NearbyTutorsActivity extends FragmentActivity implements OnMapReady
             // super.onPostExecute(aVoid);
           //  progressBar.setVisibility(View.GONE);
 
-            if(services.getServices().getServices().length==1 && services.getServices().getServices()[0].getUser().getUserId()==Integer.parseInt(userId) ){
+            if(services.getServices().getServices().size()==1 && services.getServices().getServices().get(0).getUser().getUserId()==Integer.parseInt(userId) ){
                 Toast.makeText(NearbyTutorsActivity.this, "No Services Available near your location", Toast.LENGTH_SHORT).show();
                 onMapReady(mMap);
             }

@@ -1,10 +1,10 @@
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Model_Objects;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import edu.uta.cse.personaltutorservice.Address;
+import edu.uta.cse.personaltutorservice.Request_Objects.UserRequest;
 
 /**
  * Created by Arun on 2/15/2016.
@@ -26,6 +26,15 @@ public class User
     private String PhoneNumber;
 
     private String LastName;
+    private String initials;
+
+    public String getInitials() {
+        return initials;
+    }
+
+    public void setInitials(String initials) {
+        this.initials = initials;
+    }
 
     public String getUserType ()
     {
@@ -47,7 +56,7 @@ public class User
         this.Email = Email;
     }
 
-    public edu.uta.cse.personaltutorservice.Address getAddress ()
+    public edu.uta.cse.personaltutorservice.Model_Objects.Address getAddress ()
     {
         return Address;
     }
@@ -103,11 +112,7 @@ public class User
     public void setUserId(int userId) {
         UserId = userId;
     }
-    @Override
-    public String toString()
-    {
-        return "edu.uta.cse.personaltutorservice.User [UserType = "+UserType+", Email = "+Email+", edu.uta.cse.personaltutorservice.Address = "+Address+", Password = "+Password+", FirstName = "+FirstName+", PhoneNumber = "+PhoneNumber+", LastName = "+LastName+"]";
-    }
+
     public static User parseUserjsonToJavaObject(String userjson) {
         // parser to parse the json object
         JsonParser parser = new JsonParser();

@@ -1,7 +1,9 @@
 /**
  * 
  */
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Request_Objects;
+
+import edu.uta.cse.personaltutorservice.Model_Objects.Services;
 
 /**
  * @author Arun
@@ -9,7 +11,7 @@ package edu.uta.cse.personaltutorservice;
  */
 public class NearbyServicesResponse
 {
-    private Services Services;
+    private edu.uta.cse.personaltutorservice.Model_Objects.Services Services;
 
     public Services getServices ()
     {

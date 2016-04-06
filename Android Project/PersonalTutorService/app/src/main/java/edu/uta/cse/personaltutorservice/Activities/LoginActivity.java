@@ -1,12 +1,10 @@
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +23,8 @@ import org.apache.http.util.EntityUtils;
 
 import java.security.MessageDigest;
 
-import javax.xml.datatype.Duration;
+import edu.uta.cse.personaltutorservice.R;
+import edu.uta.cse.personaltutorservice.Model_Objects.User;
 
 public class LoginActivity extends Activity {
 

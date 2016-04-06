@@ -3,27 +3,21 @@
  */
 package edu.uta.cse.webservice.pts;
 
+import java.util.ArrayList;
+
 /**
  * @author Arun
  *
  */
 public class Services
 {
-    private Service[] Services;
+	private ArrayList<Service> Services;
 
-    public Service[] getServices ()
-    {
-        return Services;
-    }
+	public ArrayList<Service> getServices() {
+		return Services;
+	}
 
-    public void setServices (Service[] Service)
-    {
-        this.Services = Service;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "ClassPojo [Service = "+Services+"]";
-    }
+	public void setServices(ArrayList<Service> services) {
+		Services = services;
+	}
 }

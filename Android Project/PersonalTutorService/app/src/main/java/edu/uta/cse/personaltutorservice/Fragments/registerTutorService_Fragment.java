@@ -1,4 +1,4 @@
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Fragments;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -44,6 +44,15 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
+import edu.uta.cse.personaltutorservice.Model_Objects.Availability;
+import edu.uta.cse.personaltutorservice.Model_Objects.Categories;
+import edu.uta.cse.personaltutorservice.Model_Objects.Category;
+import edu.uta.cse.personaltutorservice.Model_Objects.Days;
+import edu.uta.cse.personaltutorservice.R;
+import edu.uta.cse.personaltutorservice.Request_Objects.RegisterServiceRequestObject;
+import edu.uta.cse.personaltutorservice.Model_Objects.SubCategories;
+import edu.uta.cse.personaltutorservice.Model_Objects.SubCategory;
+
 /**
  * Created by Mousa Almotairi & Funda Karapinar on 3/3/2016.
  */
@@ -60,10 +69,11 @@ public class registerTutorService_Fragment extends Fragment {
     Button btnSetStartTime, btnSetEndTime, btnRegisterTutorService;
     AutoCompleteTextView tvCategory, tvSubCategory;
     String textCategory, textSubCategory, price, startTime, endTime, distance, advertise;
-    CheckBox cbMon, cbTue, cbWed, cbThu, cbFri, cbSat, cbSun;
+    CheckBox cbMon, cbTue, cbWed, cbThu, cbFri, cbSat, cbSun,cbIsAdvertised;
     TextView labelPrice;
+
     boolean[] days = {false, false, false, false, false, false, false};
-   Categories categories;
+    Categories categories;
     SubCategories subCategories;
     String[] dayNames = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
     Spinner travelInMilesSpinner;
@@ -83,7 +93,7 @@ public class registerTutorService_Fragment extends Fragment {
         }
         userId =Integer.parseInt(userIdint);
         rootView = inflater.inflate(R.layout.registertutorservice_layout, container, false);
-        advertise = "NO";
+        // advertise = "NO";
         pricePerHour = (TextView) rootView.findViewById(R.id.labelPrice);
         priceSeekBar = (SeekBar) rootView.findViewById(R.id.priceSeekBar);
         priceSeekBar.setProgress(0);
@@ -94,6 +104,7 @@ public class registerTutorService_Fragment extends Fragment {
         //  btnSetEndTime = (Button) rootView.findViewById(R.id.btnSetEndTime);
         btnRegisterTutorService = (Button) rootView.findViewById(R.id.registerTutorServiceBtn);
         tvCategory = (AutoCompleteTextView) rootView.findViewById(R.id.categoryAutoCompleteTextView);
+        cbIsAdvertised = (CheckBox)rootView.findViewById(R.id.isAdvertisedCheckBox);
         progressBar = (ProgressBar) rootView.findViewById(R.id.registerServiceProgress);
         getAllCategoriesAsyncTask task = new getAllCategoriesAsyncTask();
         task.execute();
@@ -168,6 +179,19 @@ public class registerTutorService_Fragment extends Fragment {
                     labelAvailability.setError(null);
             }
         });
+        cbIsAdvertised = (CheckBox)rootView.findViewById(R.id.isAdvertisedCheckBox);
+        cbIsAdvertised.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    advertise = "YES";
+                }
+                else{
+                    advertise = "NO";
+                }
+            }
+        });
+
 
         labelAvailability = (TextView) rootView.findViewById(R.id.labelAvailability);
 
@@ -239,16 +263,16 @@ public class registerTutorService_Fragment extends Fragment {
                 View view = travelInMilesSpinner.getSelectedView();
                 TextView textView = null;
 
-                    if (view != null && view instanceof TextView) {
-                        textView = (TextView) view;
-                        if (travelInMilesSpinner.getSelectedItemPosition() == 0) {
+                if (view != null && view instanceof TextView) {
+                    textView = (TextView) view;
+                    if (travelInMilesSpinner.getSelectedItemPosition() == 0) {
 
-                            textView.setError("Please Select Distance Willing to travel");
-                        } else {
-                            textView.setError(null);
-                            distance = travelInMilesSpinner.getSelectedItem().toString();
-                        }
+                        textView.setError("Please Select Distance Willing to travel");
+                    } else {
+                        textView.setError(null);
+                        distance = travelInMilesSpinner.getSelectedItem().toString();
                     }
+                }
 
 
                 //call the async task to
@@ -397,37 +421,37 @@ public class registerTutorService_Fragment extends Fragment {
         result = RegisterServiceRequestObject.toJsonString(request);
         return result;
     }
-public String registerTutorService(){
-    String result = "";
-    DefaultHttpClient httpclient = new DefaultHttpClient();
-    try{
-        String url = hostname + registerTutorServiceMethod;
-        HttpPost postRequest = new HttpPost(url);
-        postRequest.addHeader("Content-Type", "application/json");
-        StringEntity postentity = new StringEntity(requestJson, "UTF-8");
-        postentity.setContentType("application/json");
-        postRequest.setEntity(postentity);
+    public String registerTutorService(){
+        String result = "";
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        try{
+            String url = hostname + registerTutorServiceMethod;
+            HttpPost postRequest = new HttpPost(url);
+            postRequest.addHeader("Content-Type", "application/json");
+            StringEntity postentity = new StringEntity(requestJson, "UTF-8");
+            postentity.setContentType("application/json");
+            postRequest.setEntity(postentity);
 
-        HttpResponse httpResponse = httpclient.execute(postRequest);
+            HttpResponse httpResponse = httpclient.execute(postRequest);
 
-        HttpEntity entity = httpResponse.getEntity();
-        if (entity != null) {
-            result = EntityUtils.toString(entity);
-            Log.w("PTS-Android", "Entity : " + result);
+            HttpEntity entity = httpResponse.getEntity();
+            if (entity != null) {
+                result = EntityUtils.toString(entity);
+                Log.w("PTS-Android", "Entity : " + result);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // When HttpClient instance is no longer needed,
+            // shut down the connection manager to ensure
+            // immediate deallocation of all system resources
+            httpclient.getConnectionManager().shutdown();
         }
+        return result;
 
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        // When HttpClient instance is no longer needed,
-        // shut down the connection manager to ensure
-        // immediate deallocation of all system resources
-        httpclient.getConnectionManager().shutdown();
+
     }
-    return result;
-
-
-}
     public String formatTime() {
         String myFormat = "hh:mm a"; // your own format
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -477,40 +501,40 @@ public String registerTutorService(){
             }
         return result;
     }
-public void getAllCategories(){
-    boolean isavailable = false;
-    String result = "";
-    DefaultHttpClient httpclient = new DefaultHttpClient();
-    try {
-        String url = hostname + getCategoriesMethod ;
-        HttpGet getRequest = new HttpGet(url);
-        HttpResponse httpResponse = httpclient.execute(getRequest);
-        HttpEntity entity = httpResponse.getEntity();
-        Log.w("PTS-Android", httpResponse.getStatusLine().toString());
-        if (entity != null) {
-            result = EntityUtils.toString(entity);
-            Log.w("PTS-Android", "Entity : " + result);
-            JsonParser parser = new JsonParser();
-            Gson gson = new Gson();// create a gson object
-            JsonObject obj = (JsonObject) parser.parse(result);
-            categories = gson.fromJson(result,Categories.class);
+    public void getAllCategories(){
+        boolean isavailable = false;
+        String result = "";
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        try {
+            String url = hostname + getCategoriesMethod ;
+            HttpGet getRequest = new HttpGet(url);
+            HttpResponse httpResponse = httpclient.execute(getRequest);
+            HttpEntity entity = httpResponse.getEntity();
+            Log.w("PTS-Android", httpResponse.getStatusLine().toString());
+            if (entity != null) {
+                result = EntityUtils.toString(entity);
+                Log.w("PTS-Android", "Entity : " + result);
+                JsonParser parser = new JsonParser();
+                Gson gson = new Gson();// create a gson object
+                JsonObject obj = (JsonObject) parser.parse(result);
+                categories = gson.fromJson(result,Categories.class);
 
 
-            if (result.equals("YES")) {
-                isavailable = false;
-            } else
-                isavailable = true;
+                if (result.equals("YES")) {
+                    isavailable = false;
+                } else
+                    isavailable = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            // When HttpClient instance is no longer needed,
+            // shut down the connection manager to ensure
+            // immediate deallocation of all system resources
+            httpclient.getConnectionManager().shutdown();
         }
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    } finally {
-        // When HttpClient instance is no longer needed,
-        // shut down the connection manager to ensure
-        // immediate deallocation of all system resources
-        httpclient.getConnectionManager().shutdown();
-    }
 
-}
+    }
     public void getAllCategoriesForCategory(){
         boolean isavailable = false;
         String result = "";
@@ -527,7 +551,7 @@ public void getAllCategories(){
                 Log.w("PTS-Android", "Entity : " + result);
                 JsonParser parser = new JsonParser();
                 Gson gson = new Gson();// create a gson object
-              //  JsonObject obj = (JsonObject) parser.parse(result);
+                //  JsonObject obj = (JsonObject) parser.parse(result);
                 subCategories = gson.fromJson(result,SubCategories.class);
 
                 if (result.equals("YES")) {
@@ -548,12 +572,12 @@ public void getAllCategories(){
     private class getAllSubCategoryForCategoryAsyncTask extends AsyncTask<Void, Void,Void>{
         @Override
         protected void onPreExecute() {
-           progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected void onProgressUpdate(Void... values) {
-          //  super.onProgressUpdate(values);
+            //  super.onProgressUpdate(values);
             progressBar.animate();
         }
 
@@ -565,7 +589,7 @@ public void getAllCategories(){
 
         @Override
         protected void onPostExecute(Void aVoid) {
-          //  super.onPostExecute(aVoid);
+            //  super.onPostExecute(aVoid);
             progressBar.setVisibility(View.GONE);
             String[] subcategoriesArray = new String[subCategories.getSubCategories().length];
             for(int i=0;i<subCategories.getSubCategories().length;i++){
@@ -604,11 +628,11 @@ public void getAllCategories(){
 
         @Override
         protected void onPostExecute(Void aVoid) {
-          //  super.onPostExecute(aVoid);
+            //  super.onPostExecute(aVoid);
             progressBar.setVisibility(View.GONE);
-           for(int i=0;i<categories.getCategories().length;i++){
-               categoriesHM.put(categories.getCategories()[i].getCategoryName(), Integer.parseInt(categories.getCategories()[i].getCategoryId()));
-           }
+            for(int i=0;i<categories.getCategories().length;i++){
+                categoriesHM.put(categories.getCategories()[i].getCategoryName(), Integer.parseInt(categories.getCategories()[i].getCategoryId()));
+            }
             String[] categories = new String[categoriesHM.size()];
             categories = (new ArrayList<String>(categoriesHM.keySet())).toArray(categories);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, categories);
@@ -630,9 +654,9 @@ public void getAllCategories(){
             tvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                   // Log.w("PTS-Android", parent.getItemAtPosition(position).toString());
+                    // Log.w("PTS-Android", parent.getItemAtPosition(position).toString());
                     String key = parent.getItemAtPosition(position).toString();
-                     categoryId = categoriesHM.get(key);
+                    categoryId = categoriesHM.get(key);
                     getAllSubCategoryForCategoryAsyncTask task = new getAllSubCategoryForCategoryAsyncTask();
                     task.execute();
 
@@ -669,7 +693,7 @@ public void getAllCategories(){
         @Override
         protected Void doInBackground(Void... params) {
 
-          registerResult =  registerTutorService();
+            registerResult =  registerTutorService();
             return null;
         }
     }

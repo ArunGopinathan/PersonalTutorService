@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uta.cse.personaltutorservice.HomeFragment"
+    tools:context="edu.uta.cse.personaltutorservice.Fragments.HomeFragment"
     android:background="@mipmap/backgrounddesign5">
 
     <!-- TODO: Update blank fragment layout -->

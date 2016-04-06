@@ -1,11 +1,15 @@
 /**
  * 
  */
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Request_Objects;
 
 import android.util.Log;
 
 import com.google.gson.Gson;
+
+import edu.uta.cse.personaltutorservice.Model_Objects.Availability;
+import edu.uta.cse.personaltutorservice.Model_Objects.Category;
+import edu.uta.cse.personaltutorservice.Model_Objects.SubCategory;
 
 /**
  * @author Arun
@@ -20,11 +24,11 @@ public class RegisterServiceRequestObject
 
     private String Advertise;
 
-    private Category Category;
+    private edu.uta.cse.personaltutorservice.Model_Objects.Category Category;
 
-    private Availability Availability;
+    private edu.uta.cse.personaltutorservice.Model_Objects.Availability Availability;
 
-    private SubCategory SubCategory;
+    private edu.uta.cse.personaltutorservice.Model_Objects.SubCategory SubCategory;
 
     public String getPricePerHour ()
     {

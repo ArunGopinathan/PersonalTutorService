@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/frag_update_profile"
+    android:fillViewport="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/activity_horizontal_margin"
     android:background="@mipmap/backgrounddesign5"
     >
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
 
@@ -127,7 +128,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/email"
-                    android:visibility="visible"
+                    android:visibility="gone"
 
                     android:layout_alignParentTop="true"
                     android:layout_toStartOf="@+id/update_iv_email" />
@@ -183,7 +184,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_launcher_phone"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_alignParentTop="true"
 
                     android:layout_toStartOf="@+id/update_iv_phonenumber" />
@@ -192,7 +193,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/sms"
-                    android:visibility="visible"
+                    android:visibility="gone"
 
                     android:layout_alignParentTop="true"
                     android:layout_toStartOf="@+id/update_iv_phone" />
@@ -279,23 +280,17 @@
 
             </RelativeLayout>
 
-           <android.support.v7.widget.CardView
-                android:id="@+id/frag_course_cv_all_service"
+
+
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/frag_updateprofile_service_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_margin="3dp"
+                android:layout_height="400dp"
 
-                android:elevation="1dp">
-
-                <include
-                    layout="@layout/services_list_item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </android.support.v7.widget.CardView>
-
-
+                android:background="@color/ColorWhite"
+                />
 
             <TextView
                 android:id="@+id/update_tv_requiredField"
@@ -319,6 +314,14 @@
 
 
 
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/registerServiceProgress"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"/>
 
-</RelativeLayout>
+
+    </RelativeLayout>
 </ScrollView>

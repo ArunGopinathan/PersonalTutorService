@@ -1,10 +1,7 @@
 /**
  * 
  */
-package edu.uta.cse.personaltutorservice;
-
-import java.util.ArrayList;
-import java.util.Collection;
+package edu.uta.cse.personaltutorservice.Model_Objects;
 
 public class Availability
 {

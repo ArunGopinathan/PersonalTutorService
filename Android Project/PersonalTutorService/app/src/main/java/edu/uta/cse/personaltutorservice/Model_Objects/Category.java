@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Model_Objects;
 
 public class Category
 {

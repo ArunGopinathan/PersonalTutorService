@@ -23,7 +23,7 @@ public class Service
     
     private Address address;
     
-    private int avgRating;
+    private double avgRating;
     private int numOfFeedbacks;
     private String description;
     private double miles;
@@ -109,11 +109,11 @@ public class Service
     public void setAddress(Address address) {
         this.address = address;
     }
-    public int getAvgRating() {
+    public double getAvgRating() {
         return avgRating;
     }
 
-    public void setAvgRating(int avgRating) {
+    public void setAvgRating(double avgRating) {
         this.avgRating = avgRating;
     }
     public int getNumOfFeedbacks() {

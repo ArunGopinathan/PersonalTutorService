@@ -1,8 +1,5 @@
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Activities;
 
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -30,10 +27,13 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.uta.cse.personaltutorservice.Model_Objects.Address;
+import edu.uta.cse.personaltutorservice.R;
+import edu.uta.cse.personaltutorservice.Model_Objects.User;
 
 public class RegisterActivity extends ActionBarActivity {
     public static String hostname = "http://personaltutor.uta.ngrok.io/PersonalTutorServiceWebService/PTSWebService/";

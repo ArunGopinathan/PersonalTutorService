@@ -11,7 +11,7 @@
     android:id="@+id/RelativeLayout"
     android:layout_centerInParent="true"
     android:background="@mipmap/backgrounddesign5"
-    tools:context="edu.uta.cse.personaltutorservice.LoginActivity">
+    tools:context="edu.uta.cse.personaltutorservice.Activities.LoginActivity">
 <RelativeLayout
     android:id="@+id/logoRelativeLayout"
     android:layout_width="wrap_content"

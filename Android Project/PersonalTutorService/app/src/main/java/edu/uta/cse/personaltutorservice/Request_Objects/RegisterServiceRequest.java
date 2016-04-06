@@ -1,4 +1,4 @@
-package edu.uta.cse.personaltutorservice;
+package edu.uta.cse.personaltutorservice.Request_Objects;
 
 /**
  * Created by Arun on 3/5/2016.
