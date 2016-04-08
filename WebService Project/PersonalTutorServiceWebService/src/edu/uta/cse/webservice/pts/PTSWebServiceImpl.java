@@ -58,6 +58,133 @@ public class PTSWebServiceImpl {
 		}
 
 	}
+	@GET
+	@Path("UpdateHelpfulCount/{ReviewId}")
+	public void UpdateHelpfulCount(@PathParam("ReviewId") String ReviewId ){
+		int reviewId = Integer.parseInt(ReviewId);
+		String query = "update review set HelpfulCount = HelpfulCount + 1 where ReviewId =?";
+		MySqlHelper helper = new MySqlHelper();
+		try{
+			java.sql.PreparedStatement Statement = helper.conn
+					.prepareStatement(query);
+			Statement.setInt(1, reviewId);
+			Statement.executeUpdate();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		}
+		helper.disposeConnection();
+	}
+	
+	@GET
+	@Path("UpdateUnHelpfulCount/{ReviewId}")
+	
+	public void UpdateUnHelpfulCount(@PathParam("ReviewId") String ReviewId ){
+		int reviewId = Integer.parseInt(ReviewId);
+		String query = "update review set UnHelpfulCount = UnHelpfulCount + 1 where ReviewId =?";
+		MySqlHelper helper = new MySqlHelper();
+		try{
+			java.sql.PreparedStatement Statement = helper.conn
+					.prepareStatement(query);
+			Statement.setInt(1, reviewId);
+			Statement.executeUpdate();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		}
+		helper.disposeConnection();
+	}
+	
+	@GET
+	@Path("GetAllReviewsForService/{ServiceId}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String  getAllReviewsForService(@PathParam("ServiceId") String ServiceId){
+		String result="";
+		String query = "select * from review where ServiceId=?";
+		MySqlHelper helper = new MySqlHelper();
+		try{
+			java.sql.PreparedStatement Statement = helper.conn
+					.prepareStatement(query);
+			Statement.setInt(1, Integer.parseInt(ServiceId));
+			ResultSet rs =  Statement.executeQuery();
+			GetAllReviewForServiceResponse response = new GetAllReviewForServiceResponse();
+			ArrayList<Review> list = new ArrayList<Review>();
+			
+			while(rs.next()){
+				Review review = new Review();
+				review.setReviewId(rs.getInt("ReviewId")+"");
+				review.setServiceId(rs.getInt("ServiceId")+"");
+				review.setRating(rs.getDouble("Rating")+"");
+				review.setTitle(rs.getString("Title"));
+				review.setComment(rs.getString("Comment"));
+				review.setRaterUserId(rs.getInt("RaterUserId")+"");
+				review.setHelpfulCount(rs.getInt("HelpfulCount")+"");
+				review.setUnHelpfulCount(rs.getInt("UnHelpfulCount")+"");
+				review.setIsAnonymous(rs.getInt("isAnonymous")+"");
+				
+				list.add(review);
+			}
+			response.setReviews(list);
+			result = GetAllReviewForServiceResponse.toJsonFromObject(response);
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+		
+		return result;
+		
+	}
+	
+	@POST
+	@Path("AddReview")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String AddReview(String requestJson){
+		String result = "NO";
+		AddReviewRequest request = AddReviewRequest.getObjectFromJson(requestJson);
+		System.out.println(request.getReview().toString());
+		String query="";
+		MySqlHelper helper = new MySqlHelper();
+		//0 means not anonymous and 1 means anonymous
+		try{
+			if(request.getReview().getIsAnonymous().equals("1")){
+				 query = "insert into review(ServiceId,Rating,Title, Comment,isAnonymous) values(?,?,?,?,?)";	
+				 java.sql.PreparedStatement Statement = helper.conn
+							.prepareStatement(query);
+				 Statement.setInt(1, Integer.parseInt(request.getReview().getServiceId()));
+				 Statement.setFloat(2, Float.parseFloat(request.getReview().getRating()));
+				 Statement.setString(3, request.getReview().getTitle());
+				 Statement.setString(4, request.getReview().getComment());
+					
+				 Statement.setInt(5, Integer.parseInt(request.getReview().getIsAnonymous()));
+					
+					
+				 Statement.executeUpdate();
+			}else{
+				query = "insert into review(ServiceId,Rating,Title, Comment,RaterUserId) values(?,?,?,?,?)";	
+				 java.sql.PreparedStatement Statement = helper.conn
+							.prepareStatement(query);
+				 Statement.setInt(1, Integer.parseInt(request.getReview().getServiceId()));
+				 Statement.setFloat(2, Float.parseFloat(request.getReview().getRating()));
+					Statement.setString(3, request.getReview().getTitle());
+					Statement.setString(4, request.getReview().getComment());
+					
+					Statement.setInt(5, Integer.parseInt(request.getReview().getRaterUserId()));
+					
+					
+					Statement.executeUpdate();
+				
+			}
+			result = "YES";
+			
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		helper.disposeConnection();
+		
+		return result;
+	}
 
 	@POST
 	@Path("RegisterTutorService")

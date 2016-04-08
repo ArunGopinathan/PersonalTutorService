@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -161,8 +162,8 @@ public class viewTutorProfile_Fragment extends Fragment implements View.OnClickL
             if(services != null){
                 slAdapeter = new ServicesListAdapter(getActivity(), services);
                 rv_servicelist.setAdapter(slAdapeter);
-                int viewHeight = slAdapeter.getItemCount() * 350;
-                rv_servicelist.getLayoutParams().height = viewHeight;
+               // int viewHeight = slAdapeter.getItemCount() * 350;
+               // rv_servicelist.getLayoutParams().height = viewHeight;
                 Log.w("PTS-Android", "Itemcount: " + slAdapeter.getItemCount());
                 break;
             }
@@ -172,6 +173,7 @@ public class viewTutorProfile_Fragment extends Fragment implements View.OnClickL
 
         return rootView;
     }
+
     private void setEditButtonClickListener() {
         iv_firstname.setOnClickListener(this);
         iv_lastname.setOnClickListener(this);

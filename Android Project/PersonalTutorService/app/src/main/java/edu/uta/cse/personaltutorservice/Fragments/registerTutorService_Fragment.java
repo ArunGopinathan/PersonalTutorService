@@ -93,7 +93,7 @@ public class registerTutorService_Fragment extends Fragment {
         }
         userId =Integer.parseInt(userIdint);
         rootView = inflater.inflate(R.layout.registertutorservice_layout, container, false);
-        // advertise = "NO";
+         advertise = "NO";
         pricePerHour = (TextView) rootView.findViewById(R.id.labelPrice);
         priceSeekBar = (SeekBar) rootView.findViewById(R.id.priceSeekBar);
         priceSeekBar.setProgress(0);
@@ -419,6 +419,7 @@ public class registerTutorService_Fragment extends Fragment {
         request.setAdvertise(advertise);
 
         result = RegisterServiceRequestObject.toJsonString(request);
+        Log.w("PTS-Android",result);
         return result;
     }
     public String registerTutorService(){
