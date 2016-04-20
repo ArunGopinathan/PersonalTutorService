@@ -3,16 +3,39 @@ package edu.uta.cse.personaltutorservice.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import  com.quinny898.library.persistentsearch.SearchBox;
+import com.quinny898.library.persistentsearch.SearchResult;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import edu.uta.cse.personaltutorservice.Activities.NearbyTutorsActivity;
+import edu.uta.cse.personaltutorservice.Model_Objects.Services;
 import edu.uta.cse.personaltutorservice.R;
 
 
@@ -29,13 +52,16 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public static String hostname = "http://personaltutor.uta.ngrok.io/PersonalTutorServiceWebService/PTSWebService/";
+    public static String method = "BasicSearch/";
+    public Services services = new Services();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     View rootView;
     Button logOutButton,mapsButton;
     TextView userNameTV;
+    SearchBox searchBox;
     private OnFragmentInteractionListener mListener;
 
     public HomeFragment() {
@@ -80,6 +106,52 @@ public class HomeFragment extends Fragment {
         String greetingName = LastName+", "+firstName;
         userNameTV = (TextView) rootView.findViewById(R.id.userName);
         userNameTV.setText(greetingName);
+        searchBox = (SearchBox) rootView.findViewById(R.id.searchbox);
+        searchBox.enableVoiceRecognition(this);
+        ((EditText) searchBox.findViewById(R.id.search)).setTextColor(Color.parseColor("#000000"));
+       // searchBox.setLogoTextColor(Color.parseColor("#000000"));
+
+        searchBox.setSearchListener(new SearchBox.SearchListener() {
+            @Override
+            public void onSearchOpened() {
+
+            }
+
+            @Override
+            public void onSearchCleared() {
+
+            }
+
+            @Override
+            public void onSearchClosed() {
+
+            }
+
+            @Override
+            public void onSearchTermChanged(String s) {
+
+            }
+
+            @Override
+            public void onSearch(String s) {
+               // Toast.makeText(rootView.getContext(), "searched->"+s, Toast.LENGTH_SHORT).show();
+                getAllServicesAsyncTask task = new getAllServicesAsyncTask();
+                try
+                {
+                    task.execute(URLEncoder.encode(s,"utf-8"));
+                }
+                catch (Exception ex){
+                    ex.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onResultClick(SearchResult searchResult) {
+
+            }
+        });
         mapsButton = (Button) rootView.findViewById(R.id.btnNearbyPlaces);
         mapsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +197,20 @@ public class HomeFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (isAdded() && requestCode == SearchBox.VOICE_RECOGNITION_CODE && resultCode == getActivity().RESULT_OK) {
+            ArrayList<String> matches = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            String resultString = "";
+           if(matches.size()>=1){
+               resultString = matches.get(0);
+           }
+            searchBox.populateEditText(resultString);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -138,5 +224,57 @@ public class HomeFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private String searchFor(String query ){
+        String result = "";
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        try {
+            String url = hostname + method + query;
+            HttpGet getRequest = new HttpGet(url);
+            HttpResponse httpResponse = httpclient.execute(getRequest);
+            HttpEntity entity = httpResponse.getEntity();
+            Log.w("PTS-Android", httpResponse.getStatusLine().toString());
+            if (entity != null) {
+                result = EntityUtils.toString(entity);
+                Log.w("PTS-Android", "Entity : " + result);
+                Gson gson = new Gson();
+                JsonParser parser = new JsonParser();
+                JsonObject jsonObject= (JsonObject) parser.parse(result);
+                JsonElement element = jsonObject.get("Services");
+                services = gson.fromJson(jsonObject.toString(),Services.class);
+
+
+                Log.w("PTS-Android", "Services:" + services.toString());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            // When HttpClient instance is no longer needed,
+            // shut down the connection manager to ensure
+            // immediate deallocation of all system resources
+            httpclient.getConnectionManager().shutdown();
+        }
+
+
+        return result;
+    }
+
+    private class getAllServicesAsyncTask extends AsyncTask<String, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            searchFor(params[0]);
+            //getAllServicesByUsername(sharedPreferences.getString("Email", null));
+            return null;
+        }
+
+        protected void onPostExecute(Void aVoid) {
+            Log.w(  "PTS-Android",services.toString());
+        }
     }
 }

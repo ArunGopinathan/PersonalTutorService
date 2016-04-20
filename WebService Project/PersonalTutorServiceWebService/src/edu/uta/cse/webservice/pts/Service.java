@@ -126,7 +126,9 @@ public class Service
     public void setDescription(String description) {
         this.description = description;
     }
-
+public String getDescription(){
+	return this.description;
+}
     public double getMiles() {
         return miles;
     }

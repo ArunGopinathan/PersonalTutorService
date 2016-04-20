@@ -2,71 +2,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uta.cse.personaltutorservice.Fragments.HomeFragment"
-    android:background="@mipmap/backgrounddesign5">
+    android:background="@mipmap/backgrounddesign5"
+    tools:context="edu.uta.cse.personaltutorservice.Fragments.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText"
-            android:textSize="18dp"
-            android:text="Welcome !"
-            android:layout_above="@+id/labelQuickSummary"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/userName"
-            android:textSize="18dp"
-            android:text="Undefined"
-
-            android:layout_below="@+id/logOutButton"
-            android:layout_alignEnd="@+id/logOutButton"
-            android:layout_marginEnd="55dp" />
-
-<TextView
-    android:padding="15dp"
-    android:id="@+id/labelQuickSummary"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textSize="18dp"
-    android:text="Quick Summary:"
-    android:layout_below="@+id/userName"/>
-            <include
-                android:id="@+id/quicksummary"
-                layout="@layout/services_list_item"
+            <TextView
+                android:id="@+id/editText"
                 android:layout_width="wrap_content"
-                android:layout_height="120dp"
-                android:layout_below="@+id/labelQuickSummary"/>
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/labelQuickSummary"
+                android:layout_alignParentStart="true"
+                android:text="Welcome !"
+                android:textSize="18dp" />
 
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/logOutButton"
+                android:layout_below="@+id/logOutButton"
+                android:gravity="right"
+                android:layout_marginEnd="55dp"
+                android:text="Undefined"
+                android:textSize="18dp" />
+
+        </LinearLayout>
 
 
         <Button
+            android:id="@+id/logOutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Log out"
-            android:id="@+id/logOutButton"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
+            android:text="Log out"
+            android:layout_gravity="right" />
 
-        <Button android:id="@+id/btnNearbyPlaces"
+        <com.quinny898.library.persistentsearch.SearchBox
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/searchbox"
+            android:visibility="visible"
+            
+            />
+
+        <Button
+            android:id="@+id/btnNearbyPlaces"
             android:layout_width="match_parent"
-            android:text="Show Nearby Tutors"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/quicksummary"
+            android:text="Show Nearby Tutors"
 
             />
 
 
-
-    </RelativeLayout>
+    </LinearLayout>
 
 
 </FrameLayout>

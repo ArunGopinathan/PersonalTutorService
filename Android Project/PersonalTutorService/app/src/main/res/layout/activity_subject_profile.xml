@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<ScrollView
     android:id="@+id/frag_update_profile"
     android:fillViewport="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/activity_horizontal_margin"
     android:background="@mipmap/backgrounddesign5"
     >
@@ -53,7 +58,10 @@
                     android:id="@+id/service_details_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:rating="4.5"/>
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:rating="0"/>
             </LinearLayout>
         </RelativeLayout>
 
@@ -278,7 +286,8 @@
 
 
 
-      <!--  <RelativeLayout
+
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -292,14 +301,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18dp"
-                    android:text="Feedbacks: "/>
+                    android:text="Reviews: "/>
                 <android.support.v7.widget.RecyclerView
+                    android:id="@+id/feedback_list"
                     android:layout_width="match_parent"
                     android:layout_height="400dp">
 
                 </android.support.v7.widget.RecyclerView>
             </LinearLayout>
 
-        </RelativeLayout>-->
+        </RelativeLayout>
+        <ProgressBar
+            android:id="@+id/like_dislike_ProgressBar"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
     </LinearLayout>
 </ScrollView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_af_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+
+
+        android:src="@drawable/ic_add_white_24dp" />
+</RelativeLayout>

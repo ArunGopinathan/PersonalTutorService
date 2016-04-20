@@ -419,7 +419,6 @@ public class registerTutorService_Fragment extends Fragment {
         request.setAdvertise(advertise);
 
         result = RegisterServiceRequestObject.toJsonString(request);
-        Log.w("PTS-Android",result);
         return result;
     }
     public String registerTutorService(){

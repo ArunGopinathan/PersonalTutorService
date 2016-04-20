@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,10 +14,11 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,6 +38,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.util.ArrayList;
 
+import edu.uta.cse.personaltutorservice.Activities.SubjectProfileActivity;
 import edu.uta.cse.personaltutorservice.Model_Objects.Address;
 import edu.uta.cse.personaltutorservice.R;
 import edu.uta.cse.personaltutorservice.Model_Objects.Service;
@@ -66,7 +69,7 @@ public class viewTutorProfile_Fragment extends Fragment implements View.OnClickL
     EditText et_address;
     TextView tv_requiredtext;
     Button bt_update;
-
+   // CardView cardView;
     String mFirstname;
     String mLastname;
     String mEmail;
@@ -74,14 +77,13 @@ public class viewTutorProfile_Fragment extends Fragment implements View.OnClickL
     String mAddress;
     ServicesListAdapter slAdapeter;
 
-    CardView cv_serviceItem;
+
     RecyclerView rv_servicelist;
 
-    RecyclerView.Adapter servicesAdapter;
-    RecyclerView.LayoutManager servicesLayoutManager;
 
+    String userId;
     String requestJson = "",updateResult="";
-
+    public FloatingActionButton mAddFeedbackButton;
     Services services;
     @Nullable
     @Override
@@ -89,7 +91,7 @@ public class viewTutorProfile_Fragment extends Fragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.viewtutorprofile_layout, container, false);
         sharedPreferences = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("UserId",null);
+        userId = sharedPreferences.getString("UserId", null);
         if(userId == null){
             getActivity().finish();
         }
@@ -109,36 +111,7 @@ public class viewTutorProfile_Fragment extends Fragment implements View.OnClickL
 
         et_address = ((EditText)rootView.findViewById(R.id.update_et_address));
         et_address.setText(sharedPreferences.getString("Address", null));
-        ((ImageView) rootView.findViewById(R.id.update_iv_sms)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-                sendIntent.putExtra("address", sharedPreferences.getString("PhoneNumber", null));
-                sendIntent.putExtra("sms_body", "");
-                sendIntent.setType("vnd.android-dir/mms-sms");
-                startActivity(sendIntent);
-            }
-        });
 
-        ((ImageView) rootView.findViewById(R.id.update_iv_phone)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + sharedPreferences.getString("PhoneNumber", null)));
-                startActivity(callIntent);
-            }
-        });
-
-        ((ImageView)rootView.findViewById(R.id.update_iv_email_send)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", sharedPreferences.getString("Email", null), null));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject:");
-                emailIntent.putExtra(Intent.EXTRA_TEXT, "");
-                startActivity(Intent.createChooser(emailIntent, "Send email..."));
-            }
-        });
 
         iv_firstname =(ImageView) rootView.findViewById(R.id.update_iv_firstname);
         iv_lastname =(ImageView) rootView.findViewById(R.id.update_iv_lastname);
@@ -153,25 +126,65 @@ public class viewTutorProfile_Fragment extends Fragment implements View.OnClickL
 
         //Cardview
 //        cv_serviceItem = (CardView) rootView.findViewById(R.id.frag_course_cv_all_service);
+        // cardView = (CardView) rootView.findViewById(R.id.frag_course_cv_all_service);
+
+        setEditButtonClickListener();
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         rv_servicelist = (RecyclerView) rootView.findViewById(R.id.frag_updateprofile_service_list);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_servicelist.setHasFixedSize(true);
-        rv_servicelist.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv_servicelist.setLayoutManager(layoutManager);
+        rv_servicelist.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), rv_servicelist, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                onListItemClicked(view, position);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
         getAllServicesAsyncTask task = new getAllServicesAsyncTask();
         task.execute();
+
+
         while(true) {
             if(services != null){
+
                 slAdapeter = new ServicesListAdapter(getActivity(), services);
                 rv_servicelist.setAdapter(slAdapeter);
-               // int viewHeight = slAdapeter.getItemCount() * 350;
-               // rv_servicelist.getLayoutParams().height = viewHeight;
+               /* LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View inflatedView = inflater.inflate(R.layout.services_list_item, null);
+                CardView cv = (CardView) inflatedView.findViewById(R.id.frag_course_cv_all_service);*/
+                int viewHeight =  slAdapeter.getItemCount()*225;
+                rv_servicelist.getLayoutParams().height = viewHeight;
+                Log.w("PTS-Android","cardView Height "+viewHeight);
                 Log.w("PTS-Android", "Itemcount: " + slAdapeter.getItemCount());
                 break;
             }
         }
         //setAdapter();
-        setEditButtonClickListener();
+    }
 
-        return rootView;
+
+
+
+    private void onListItemClicked(View view, int position) {
+        Log.w("PTS-Android", services.getServices().get(position).getServiceId());
+
+        Log.w("PTS-Android", "Service Id -->" + services.getServices().get(position).getServiceId());
+        Intent intent = new Intent(getActivity(), SubjectProfileActivity.class);
+        intent.putExtra("SERVICE_ID",services.getServices().get(position).getServiceId());
+        getActivity().startActivity(intent);
     }
 
     private void setEditButtonClickListener() {
@@ -365,51 +378,95 @@ public class viewTutorProfile_Fragment extends Fragment implements View.OnClickL
         }
     }
 
-    private void setAdapter() {
-        ArrayList<Service> dummyServiceList= new ArrayList<Service>();
-        Services services = new Services();
-        Service dummyService = new Service();
-        Address address = new Address();
-        address.setAddressLine1("930 Benge Dr");
-        address.setCity("Arlington");
-        address.setState("TX");
-        address.setZipCode("76013");
-        dummyService.setAddress(address);
-        dummyService.setAvgRating(50);
-        dummyService.setCatagory("Android");
-        dummyService.setSubCatagory("Backend");
-        dummyService.setDescription("what the fxxk");
-        dummyService.setInitials("Z,C");
-        dummyService.setTutorName("Zhenyu Chen");
-        dummyService.setMiles(20.0);
-        dummyService.setNumOfFeedbacks(123);
+    public static interface ClickListener {
+        public void onClick(View view, int position);
 
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        dummyServiceList.add(dummyService);
-        services.setServices(dummyServiceList);
-
-
-
-
-
-
-
-
-
-        slAdapeter = new ServicesListAdapter(getActivity(),services);
-        rv_servicelist.setAdapter(slAdapeter);
-        int viewHeight = slAdapeter.getItemCount() * 350;
-        rv_servicelist.getLayoutParams().height = viewHeight;
-
+        public void onLongClick(View view, int position);
     }
+
+    static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+        private GestureDetector gestureDetector;
+        private ClickListener clickListener;
+        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
+            this.clickListener = clickListener;
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+
+
+                    if (child != null && clickListener != null) {
+                        Log.w("PTS-Android", "X,Y : " + e.getX()+","+e.getY());
+                        clickListener.onLongClick(child, recyclerView.getChildPosition(child));
+                    }
+                }
+            });
+        }
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
+                clickListener.onClick(child, rv.getChildPosition(child));
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+        }
+    }
+
+//    private void setAdapter() {
+//        ArrayList<Service> dummyServiceList= new ArrayList<Service>();
+//        Services services = new Services();
+//        Service dummyService = new Service();
+//        Address address = new Address();
+//        address.setAddressLine1("930 Benge Dr");
+//        address.setCity("Arlington");
+//        address.setState("TX");
+//        address.setZipCode("76013");
+//        dummyService.setAddress(address);
+//        dummyService.setAvgRating(50);
+//        dummyService.setCatagory("Android");
+//        dummyService.setSubCatagory("Backend");
+//        dummyService.setDescription("what the fxxk");
+//        dummyService.setInitials("Z,C");
+//        dummyService.setTutorName("Zhenyu Chen");
+//        dummyService.setMiles(20.0);
+//        dummyService.setNumOfFeedbacks(123);
+//
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        dummyServiceList.add(dummyService);
+//        services.setServices(dummyServiceList);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//        slAdapeter = new ServicesListAdapter(getActivity(),services);
+//        rv_servicelist.setAdapter(slAdapeter);
+//        int viewHeight = slAdapeter.getItemCount() * 350;
+//        rv_servicelist.getLayoutParams().height = viewHeight;
+//
+//    }
 }

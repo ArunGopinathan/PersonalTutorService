@@ -58,7 +58,7 @@ public class ServicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void createServiceRow(ViewHolder holder, int position){
         Service curService = data.get(position);
-        Log.w("PTS-Android", "Itemcount: " + curService);
+        Log.w("PTS-Android", "current service: " + curService);
         holder.tv_maincategory.setText(curService.getCategory().getCategoryName() + " - " + curService.getSubCategory().getSubCategoryName());
         holder.tv_firstname.setText(curService.getUser().getFirstName());
         holder.tv_lastname.setText(curService.getUser().getLastName());
@@ -68,7 +68,7 @@ public class ServicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.tv_address.setText(curService.getAddress().toString());
         holder.tv_description.setText(curService.getDescription());
         holder.tv_withinMiles.setText(curService.getMiles() + "");
-        if(curService.getIsAdvertisment().equals("YES")){
+        if(curService.isAdvertisment().equals("YES")){
             holder.iv_ad.setVisibility(View.VISIBLE);
         }
 
@@ -101,6 +101,7 @@ public class ServicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tv_withinMiles = (TextView) itemView.findViewById(R.id.service_list_item_tv_distance);
             iv_ad = (ImageView) itemView.findViewById(R.id.service_details_iv_ad);
             devider = (LinearLayout) itemView.findViewById(R.id.course_list_item_devider);
+
         }
     }
 

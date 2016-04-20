@@ -113,13 +113,13 @@ public class NearbyTutorsActivity extends FragmentActivity implements OnMapReady
     }
     @Override
     public void onInfoWindowClick(Marker marker){
+
         Log.w("PTS-Android",marker.getId());
 
-            Log.w("PTS-Android", "Service Id -->" + idtoUserId.get(marker.getId()));
+        Log.w("PTS-Android", "Service Id -->" + idtoUserId.get(marker.getId()));
         Intent intent = new Intent(getApplicationContext(), SubjectProfileActivity.class);
         intent.putExtra("SERVICE_ID", idtoUserId.get(marker.getId()));
         startActivity(intent);
-
     }
     private String getNearestTutors(){
         String result = "";
